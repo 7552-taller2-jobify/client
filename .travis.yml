@@ -13,7 +13,7 @@ android:
     - addon-google_apis-google-19
 
     # Emuladores para tests
-    - sys-img-armeabi-v7a-android-22
+    - sys-img-armeabi-v7a-android-24
     - sys-img-x86-android-17
 
 jdk:
