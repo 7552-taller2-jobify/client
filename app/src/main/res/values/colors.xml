@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="statusConfirmed">#c8e6c9</color>
+    <color name="statusCancelled">#ff0000</color>
+    <color name="statusDraft">#1565c0</color>
+</resources>

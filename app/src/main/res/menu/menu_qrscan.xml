@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ar.fi.uba.jobify.activities.MyDayAgendaActivity" >
+    <item
+        android:id="@+id/action_qrscan"
+        android:orderInCategory="100"
+        android:title="@string/action_qrscan"
+        android:icon="@drawable/ic_qr_code_white"
+        app:showAsAction="always"/>
+</menu>

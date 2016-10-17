@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "486688976250",
+    "project_id": "ordertracker-1276"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486688976250:android:7293b6a8b36c6a15",
+        "android_client_info": {
+          "package_name": "fi.uba.ar.soldme"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8pxuq9fbaBjr1XX2c4tmUu2-ZD306px4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

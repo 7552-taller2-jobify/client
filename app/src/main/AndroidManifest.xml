@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fi.uba.ar.soldme">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="ar.fi.uba.jobify.activities.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ar.fi.uba.jobify.activities.MyContactsActivity"
+            android:label="@string/contacts"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="ar.fi.uba.jobify.activities.ContactActivity"
+            android:label="@string/contacts"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MyContactsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MyContactsActivity" />
+        </activity>
+        <activity
+            android:name="ar.fi.uba.jobify.activities.LoginActivity"
+            android:label="@string/menu_login"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
+        </activity>
+
+    </application>
+
+</manifest>
