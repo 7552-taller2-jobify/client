@@ -20,7 +20,7 @@ import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.tasks.contact.GetContactTask;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.jobify.utils.FieldValidator.isValidMail;

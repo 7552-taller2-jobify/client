@@ -11,7 +11,7 @@ import java.util.Map;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 /**
  * Created by smpiano on 9/28/16.

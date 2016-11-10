@@ -22,7 +22,7 @@ import ar.fi.uba.jobify.tasks.contact.GetContactListTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.jobify.utils.FieldValidator.showCoolDistance;

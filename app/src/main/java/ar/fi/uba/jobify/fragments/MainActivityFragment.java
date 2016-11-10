@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 /**
  * A placeholder fragment containing a simple view.
