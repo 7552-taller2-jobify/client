@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 
 import ar.fi.uba.jobify.domains.Professional;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 /**
  * Created by smpiano on 9/28/16.

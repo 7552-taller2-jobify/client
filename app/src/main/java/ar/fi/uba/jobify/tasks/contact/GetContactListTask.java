@@ -13,7 +13,7 @@ import ar.fi.uba.jobify.domains.ContactSearchResult;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.ShowMessage;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 
 public class GetContactListTask extends AbstractTask<String,Void,ContactSearchResult,ContactListAdapter> {

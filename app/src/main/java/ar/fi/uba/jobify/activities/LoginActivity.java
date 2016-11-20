@@ -4,9 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import ar.fi.uba.jobify.domains.Token;
 import ar.fi.uba.jobify.server.RestClient;
@@ -14,7 +17,7 @@ import ar.fi.uba.jobify.tasks.auth.PostAuthTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 
 public class LoginActivity extends AppCompatActivity implements PostAuthTask.ResultLogin {
@@ -38,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         loginButton = (Button) findViewById(R.id.activity_login_btn_login);
         emailText = (EditText) findViewById(R.id.activity_login_input_email);
         passwordText = (EditText) findViewById(R.id.activity_login_input_password);
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
 

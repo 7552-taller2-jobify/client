@@ -1,20 +1,27 @@
 {
   "project_info": {
-    "project_number": "486688976250",
-    "project_id": "ordertracker-1276"
+    "project_number": "10563863626",
+    "firebase_url": "https://jobify-98aaf.firebaseio.com",
+    "project_id": "jobify-98aaf",
+    "storage_bucket": "jobify-98aaf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:486688976250:android:7293b6a8b36c6a15",
+        "mobilesdk_app_id": "1:10563863626:android:590a2f09816c5eb0",
         "android_client_info": {
-          "package_name": "fi.uba.ar.soldme"
+          "package_name": "fi.uba.ar.jobify"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "10563863626-638fnvno07phrmp3batolcvd9gcnia8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyA8pxuq9fbaBjr1XX2c4tmUu2-ZD306px4"
+          "current_key": "AIzaSyChCxs6eGBW2EN4RGRhqR3mw5DAKG0yuEY"
         }
       ],
       "services": {
@@ -26,7 +33,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

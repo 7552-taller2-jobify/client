@@ -9,11 +9,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -25,17 +28,19 @@ import ar.fi.uba.jobify.utils.DateUtils;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -109,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
             l.setLongitude(Double.valueOf(lon));
             debugCardMessage(l);
         }
+
+        //Obtengo el token para probar
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
 
     }
 

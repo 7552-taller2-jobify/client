@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 public class MyContactsActivity extends AppCompatActivity {
 

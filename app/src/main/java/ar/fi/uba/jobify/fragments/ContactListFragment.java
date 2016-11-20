@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import ar.fi.uba.jobify.activities.ContactActivity;
 import ar.fi.uba.jobify.adapters.ContactListAdapter;
 import ar.fi.uba.jobify.domains.Contact;
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 /**
  * Created by smpiano on 9/28/16.

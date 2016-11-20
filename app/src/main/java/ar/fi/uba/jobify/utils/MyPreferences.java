@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import fi.uba.ar.soldme.R;
+import fi.uba.ar.jobify.R;
 
 /**
  * Created by smpiano on 9/28/16.
