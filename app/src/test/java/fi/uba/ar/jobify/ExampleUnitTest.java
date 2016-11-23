@@ -1,4 +1,4 @@
-package fi.uba.ar.soldme;
+package fi.uba.ar.jobify;
 
 import org.junit.Test;
 

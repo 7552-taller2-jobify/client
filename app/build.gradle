@@ -28,5 +28,10 @@ android {
         compile 'com.google.code.gson:gson:2.5'
         compile 'com.google.firebase:firebase-messaging:9.8.0'
     }
+
     apply plugin: 'com.google.gms.google-services'
+
+    lintOptions {
+        abortOnError false
+    }
 }

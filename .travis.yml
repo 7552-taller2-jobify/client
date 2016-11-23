@@ -1,30 +1,56 @@
 language: android
+
+cache:
+  directories:
+    - ${TRAVIS_BUILD_DIR}/gradle/caches/
+    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
+
+env:
+  global:
+    - ANDROID_API_LEVEL=23
+    - EMULATOR_API_LEVEL=21
+    - ANDROID_BUILD_TOOLS_VERSION=23.0.2
+    - ANDROID_ABI=armeabi-v7a
+    - ANDROID_TAG=google_apis
+    - ANDROID_ABISSS=google_apis/armeabi-v7a
+
 android:
   components:
     - tools
+    - platform-tools
     - tools
-    - build-tools-24.0.1
-    - android-24
-
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+    - android-$ANDROID_API_LEVEL
+    - android-$EMULATOR_API_LEVEL
     # Componentes adicionales
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-    - addon-google_apis-google-19
+    # For google apis
+    - addon-google_apis-google-$ANDROID_API_LEVEL
+    - addon-google_apis-google-$EMULATOR_API_LEVEL
+    - extra-android-support
 
     # Emuladores para tests
-    - sys-img-armeabi-v7a-android-24
-    - sys-img-x86-android-17
+    - sys-img-armeabi-v7a-google_apis-$ANDROID_API_LEVEL
+    - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
 
 jdk:
   - oraclejdk8 #Supports Java 8
 
 # Para hacer correr el emulador
 before_script:
-  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
+  - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-google_apis-google-$EMULATOR_API_LEVEL
+  - android list targets
+  - echo no | android create avd --force -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 script:
   - ./gradlew build connectedCheck
+#  - ./gradlew clean check connectedCheck -x library:signArchives -PdisablePreDex
+
+notifications:
+  slack: 7552-taller2-jobify:u1jKfkguZjs46RhfDVZY72RD
+
