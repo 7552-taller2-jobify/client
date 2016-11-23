@@ -32,8 +32,13 @@ public class PostAuthTask extends AbstractTask<String,Void,Token,LoginActivity> 
             token = (Token) restClient.post("/users/login", body, headers);
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
-        } catch (Exception e) {
-            ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
+        } catch (final Exception e) {
+            weakReference.get().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
+                }
+            });
+
         }
         return token;
     }

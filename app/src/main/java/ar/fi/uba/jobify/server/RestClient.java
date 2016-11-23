@@ -129,7 +129,7 @@ public class RestClient {
                 Log.e("parse_response_error", "Error al leer el response de " + url.getPath(), e);
             }
         } catch (SocketTimeoutException e) {
-            throw new ServerErrorException("El server no pudo responder antes del timeout ["+AppSettings.getServerTimeout()+"]");
+            throw new ServerErrorException("El server [" + AppSettings.getServerHost() + "] no pudo responder antes del timeout ["+AppSettings.getServerTimeout()+"]");
         } catch (IOException e) {
             throw new ServerErrorException(method,url,body,headers,responseStatus,errorMsg);
         } finally{

@@ -9,10 +9,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE"
+        android:name="fi.uba.ar.jobify.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="fi.uba.ar.soldme.permission.C2D_MESSAGE" />
+    <uses-permission android:name="fi.uba.ar.jobify.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -51,6 +51,15 @@
         <activity
             android:name="ar.fi.uba.jobify.activities.LoginActivity"
             android:label="@string/menu_login"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="ar.fi.uba.jobify.activities.RegistryActivity"
+            android:label="Registry"
             android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

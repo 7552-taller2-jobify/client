@@ -115,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
             debugCardMessage(l);
         }
 
-        //Obtengo el token para probar
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
-
     }
 
     public void showSnackbarSimpleMessage(String message){

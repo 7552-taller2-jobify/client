@@ -130,4 +130,9 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         return valid;
     }
 
+    public void registry(View view) {
+        Intent intent = new Intent(this, RegistryActivity.class);
+        startActivity(intent);
+    }
+
 }

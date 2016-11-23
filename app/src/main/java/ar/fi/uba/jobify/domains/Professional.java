@@ -126,18 +126,15 @@ public class Professional {
     public static Professional fromJson(JSONObject json) {
         Professional professional = null;
         try {
-            professional = new Professional(json.getLong("id"));
+            //professional = new Professional(json.getLong("id"));
+            professional = new Professional(1L);
 
             professional.setName(json.getString("first_name"));
             professional.setLastName(json.getString("last_name"));
 
             professional.setEmail(json.getString("email"));
             if (json.has("avatar")) {
-                professional.setAvatar(json.getString("avatar"));
-            }
-
-            if (json.has("phone_number")) {
-                professional.setPhoneNumber(json.getString("phone_number"));
+                professional.setAvatar(json.getString("picture"));
             }
 
 
