@@ -30,7 +30,7 @@ public class Token {
 
     public static Token fromJson(JSONObject json) {
         try {
-            Token token = new Token(json.getJSONObject("profile").getString("id"));
+            Token token = new Token(json.getJSONObject("metadata").getString("token"));
             token.setProfessional(Professional.fromJson(json.getJSONObject("profile")));
             return token;
         } catch (JSONException e) {
