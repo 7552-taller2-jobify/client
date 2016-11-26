@@ -52,6 +52,21 @@ android:fitsSystemWindows="true">
             android:hint="Password"/>
     </android.support.design.widget.TextInputLayout>
 
+    <!-- HOST -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText android:id="@+id/activity_login_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Host"
+            android:text="192.168.1.1"
+            android:digits="1234567890." />
+    </android.support.design.widget.TextInputLayout>
+
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/activity_login_btn_login"
         android:layout_width="fill_parent"

@@ -11,6 +11,7 @@ import java.util.Map;
 import ar.fi.uba.jobify.activities.LoginActivity;
 import ar.fi.uba.jobify.domains.Token;
 import ar.fi.uba.jobify.exceptions.BusinessException;
+import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.ShowMessage;
 
@@ -32,13 +33,14 @@ public class PostAuthTask extends AbstractTask<String,Void,Token,LoginActivity> 
             token = (Token) restClient.post("/users/login", body, headers);
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
-        } catch (final Exception e) {
+        } catch (final ServerErrorException e) {
             weakReference.get().runOnUiThread(new Runnable() {
                 public void run() {
                     ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
                 }
             });
-
+        } catch (Exception e) {
+            ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
         }
         return token;
     }
