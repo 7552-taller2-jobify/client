@@ -50,8 +50,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
+        app:headerLayout="@layout/left_navigator_main"
+        app:menu="@menu/left_navigator_links" />
     <!--
         <ListView
             android:id="@+id/left_drawer"

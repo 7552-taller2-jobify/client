@@ -30,7 +30,7 @@ public class ContactListFragment extends Fragment implements AdapterView.OnItemC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View fragmentView= inflater.inflate(R.layout.fragment_clients_list, container, false);
+        View fragmentView= inflater.inflate(R.layout.fragment_contact_list, container, false);
         ListView clientsList= (ListView)fragmentView.findViewById(R.id.clientListView);
 
         ContactListAdapter clientsAdapter = new ContactListAdapter( getActivity(), getContext(), R.layout.list_client_item, new ArrayList<Contact>());
