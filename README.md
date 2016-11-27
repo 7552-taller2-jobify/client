@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/7552-taller2-jobify/contact.svg?branch=master)](https://travis-ci.org/7552-taller2-jobify/contact)
+[![Build Status](https://travis-ci.org/7552-taller2-jobify/client.svg?branch=master)](https://travis-ci.org/7552-taller2-jobify/client)
 
 # Cliente Jobify Android
 
