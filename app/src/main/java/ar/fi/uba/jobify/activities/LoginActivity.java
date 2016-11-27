@@ -4,16 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-
 import ar.fi.uba.jobify.domains.Token;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.tasks.auth.PostAuthTask;
+import ar.fi.uba.jobify.utils.AppSettings;
+import ar.fi.uba.jobify.utils.FieldValidator;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
@@ -26,6 +25,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
 
     private EditText emailText;
     private EditText passwordText;
+    private EditText hostText;
     private Button loginButton;
     private MyPreferences pref = new MyPreferences(this);
     private ProgressDialog progressDialog;
@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         loginButton = (Button) findViewById(R.id.activity_login_btn_login);
         emailText = (EditText) findViewById(R.id.activity_login_input_email);
+        hostText = (EditText) findViewById(R.id.activity_login_host);
         passwordText = (EditText) findViewById(R.id.activity_login_input_password);
 
 
@@ -66,7 +67,10 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         progressDialog.show();
 
         loginButton.setEnabled(false);
-        if (RestClient.isOnline(this)) new PostAuthTask(this).execute(emailText.getText().toString(), passwordText.getText().toString());
+        if (RestClient.isOnline(this)) {
+            AppSettings.setServerHost(hostText.getText().toString());
+            new PostAuthTask(this).execute(emailText.getText().toString(), passwordText.getText().toString());
+        }
     }
 
 
@@ -125,6 +129,13 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
             valid = false;
         } else {
             passwordText.setError(null);
+        }
+
+        if (!FieldValidator.isIPValid(hostText.getText().toString())) {
+            hostText.setError("Ingrese una IPv4 válida!");
+            valid = false;
+        } else {
+            hostText.setError(null);
         }
 
         return valid;

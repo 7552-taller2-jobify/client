@@ -5,9 +5,7 @@ package ar.fi.uba.jobify.utils;
  */
 public class AppSettings {
 
-    //private static final String SERVER_HOST = "https://jobify-api.herokuapp.com";
-    private static final String SERVER_HOST = "http://10.1.194.94:8000";
-    //private static final String SERVER_HOST = "https://jobify-7552-taller2.herokuapp.com";
+    private static String SERVER_HOST = null;
 
     private static final int SERVER_TIMEOUT = 5000; //5seg
     private static final Double GPS_LAT = -34.563424;
@@ -16,6 +14,10 @@ public class AppSettings {
 
     public static String getServerHost(){
         return SERVER_HOST;
+    }
+
+    public static void setServerHost(String host){
+        SERVER_HOST = "https://" + host + ":8000";
     }
 
     public static int getServerTimeout() { return SERVER_TIMEOUT; }
