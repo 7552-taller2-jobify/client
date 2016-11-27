@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/7552-taller2-jobify/client.svg?branch=master)](https://travis-ci.org/7552-taller2-jobify/client)
 
+
 # Cliente Jobify Android
 
 Cliente Android que consume información del server para poder buscar los perfiles de usuarios y disponibilidad de ofertas de trabajo
@@ -7,15 +8,25 @@ Cliente Android que consume información del server para poder buscar los perfil
 
 # Instalación
 
-## Desarrollo
+## Desarrollo
 
-Luego de correr los scripts de build, el apk se encuentra en la dirección:
+Luego de correr los scripts de build, el APK se encuentra en la dirección:
 
-*/app/build/outputs/apk/app-debug.apk*
+
+1. Se genera el archivo */app/build/outputs/apk/app-debug.apk*
+
+2. Renombrarlo a jobify.apk
+
+3. Pasarlo al celular
+
+4. Instalarlo con instalador de Android o alguno semejante.
+
+5. Enjoy :)
 
 ## Producción
 
 Desde el celular android bajar el APK desde https://github.com/7552-taller2-jobify/client/releases
+
 
 # Especificaciones
 
