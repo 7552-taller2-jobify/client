@@ -4,21 +4,21 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import ar.fi.uba.jobify.domains.Register;
-import ar.fi.uba.jobify.domains.Token;
+import ar.fi.uba.jobify.fragments.DatePickerFragment;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.auth.PostAuthTask;
-import ar.fi.uba.jobify.tasks.registry.PostRegistryTask;
-import ar.fi.uba.jobify.utils.MyPreferenceHelper;
+import ar.fi.uba.jobify.tasks.auth.PostRegistryTask;
+import ar.fi.uba.jobify.utils.AppSettings;
+import ar.fi.uba.jobify.utils.LocationHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
@@ -33,18 +33,26 @@ public class RegistryActivity extends AppCompatActivity implements PostRegistryT
     private EditText emailText;
     private EditText passwordText;
     private EditText repasswordText;
-    private DatePicker birthdayDate;
-    private RadioButton genderMale;
+    private EditText birthdayDate;
     private Button joinmeButton;
     private String gender;
     private MyPreferences pref = new MyPreferences(this);
     private ProgressDialog progressDialog;
+    private DatePickerFragment birthdayFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registry);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_registry_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Registro");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         pref.remove(getString(R.string.shared_pref_current_token));
+        LocationHelper.updatePosition(this.getApplicationContext());
 
         joinmeButton = (Button) findViewById(R.id.activity_registry_btn_joinme);
         firstNameText = (EditText) findViewById(R.id.activity_registry_input_firstname);
@@ -52,7 +60,8 @@ public class RegistryActivity extends AppCompatActivity implements PostRegistryT
         emailText = (EditText) findViewById(R.id.activity_registry_input_email);
         passwordText = (EditText) findViewById(R.id.activity_registry_input_password);
         repasswordText = (EditText) findViewById(R.id.activity_registry_input_repassword);
-        birthdayDate = (DatePicker) findViewById(R.id.activity_registry_input_birthday);
+        birthdayDate = (EditText) findViewById(R.id.activity_registry_input_birthday);
+        initBirthDate();
 
         joinmeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -61,6 +70,21 @@ public class RegistryActivity extends AppCompatActivity implements PostRegistryT
                 joinme();
             }
         });
+    }
+
+    private void initBirthDate() {
+        //Calendar c = Calendar.getInstance();
+        //c.set(Calendar.YEAR,c.get(Calendar.YEAR)-18);
+        //birthdayDate.setText(DateUtils.formatShortDateArg2(c.getTime()));
+        birthdayDate.setText("");
+    }
+
+    public void showDatePickerDialog(View v) {
+        birthdayFragment = new DatePickerFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", R.id.activity_registry_input_birthday);
+        birthdayFragment.setArguments(args);
+        birthdayFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     public void onRadioButtonClicked(View view) {
@@ -91,15 +115,17 @@ public class RegistryActivity extends AppCompatActivity implements PostRegistryT
 
         joinmeButton.setEnabled(false);
 
-        String birthday = birthdayDate.getDayOfMonth()+"/"+birthdayDate.getMonth()+"/"+birthdayDate.getYear();
-
-        //Obtengo el token para probar
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
 
-        if (RestClient.isOnline(this)) new PostRegistryTask(this).execute(
-                emailText.getText().toString(), passwordText.getText().toString(), firstNameText.getText().toString(),
-                lastNameText.getText().toString(), gender, birthday, "1","2","cityexample", refreshedToken);
+        if (RestClient.isOnline(this)) {
+            String lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+            String lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+            // TODO smpiano ver que hacer con la city
+            new PostRegistryTask(this).execute(
+                    emailText.getText().toString(), passwordText.getText().toString(), firstNameText.getText().toString(),
+                    lastNameText.getText().toString(), gender, birthdayDate.getText().toString(), lat, lon, refreshedToken);
+        }
     }
 
 
@@ -127,6 +153,11 @@ public class RegistryActivity extends AppCompatActivity implements PostRegistryT
             emailText.setText("");
             passwordText.setText("");
             repasswordText.setText("");
+            ((RadioButton) findViewById(R.id.activity_registry_radio_m)).setChecked(false);
+            ((RadioButton) findViewById(R.id.activity_registry_radio_f)).setChecked(false);
+            gender = "";
+            initBirthDate();
+
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

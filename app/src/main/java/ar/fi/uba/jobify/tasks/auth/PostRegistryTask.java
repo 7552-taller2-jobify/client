@@ -1,4 +1,4 @@
-package ar.fi.uba.jobify.tasks.registry;
+package ar.fi.uba.jobify.tasks.auth;
 
 import android.util.Log;
 
@@ -16,6 +16,7 @@ import ar.fi.uba.jobify.activities.RegistryActivity;
 import ar.fi.uba.jobify.domains.Register;
 import ar.fi.uba.jobify.domains.Token;
 import ar.fi.uba.jobify.exceptions.BusinessException;
+import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.ShowMessage;
 
@@ -29,14 +30,13 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,Registry
     protected Register doInBackground(String... params) {
         String email = params[0];
         String password = params[1];
-        String deviceId = params[9];
         String firstName = params[2];
         String lastName = params[3];
         String gender = params[4];
         String birthday = params[5];
         String lat = params[6];
         String lon = params[7];
-        String city = params[8];
+        String deviceId = params[8];
 
         String body = "{\"email\": \"" + email + "\"," +
                 "\"password\": \"" + password + "\"," +
@@ -49,7 +49,7 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,Registry
                 "\"lat\": \"" + lat + "\"," +
                 "\"lon\": \"" + lon + "\"" +
                 "}," +
-                "\"city\": \"" + city + "\"}";
+                "\"city\": \"" + "BORRAME" + "\"}"; // TODO smpiano borrame!
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         Register register = null;
@@ -57,6 +57,12 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,Registry
             register = (Register) restClient.post("/users/register", body, headers);
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
+        } catch (final ServerErrorException e) {
+            weakReference.get().runOnUiThread(new Runnable() {
+                public void run() {
+                    ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
+                }
+            });
         } catch (Exception e) {
             ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
         }

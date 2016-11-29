@@ -19,7 +19,7 @@ public class Register {
         try {
             return new Register(json.getString("registration"));
         } catch (JSONException e) {
-            throw new BusinessException("Error parsing Token.", e);
+            throw new BusinessException("Error parsing Register.", e);
         }
     }
 }

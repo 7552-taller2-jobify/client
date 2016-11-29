@@ -16,9 +16,11 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ar.fi.uba.jobify.domains.Contact;
-import ar.fi.uba.jobify.domains.ContactSearchResult;
+import ar.fi.uba.jobify.domains.Professional;
+import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
+import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.contact.GetContactListTask;
+import ar.fi.uba.jobify.tasks.contact.GetMineContactListTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
@@ -27,7 +29,7 @@ import fi.uba.ar.jobify.R;
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.jobify.utils.FieldValidator.showCoolDistance;
 
-public class ContactListAdapter extends ArrayAdapter<Contact> implements GetContactListTask.ClientsListAggregator {
+public class ContactListAdapter extends ArrayAdapter<ProfessionalSearchItem> implements GetMineContactListTask.ClientsListAggregator {
 
     private boolean firstRefresed;
     private Location loc;
@@ -38,7 +40,7 @@ public class ContactListAdapter extends ArrayAdapter<Contact> implements GetCont
     private MyPreferences pref = new MyPreferences(getContext());
 
     public ContactListAdapter(Activity activity, Context context, int resource,
-                              List<Contact> contacts) {
+                              List<ProfessionalSearchItem> contacts) {
         super(context, resource, contacts);
         this.activity = activity;
         total=1;
@@ -67,7 +69,7 @@ public class ContactListAdapter extends ArrayAdapter<Contact> implements GetCont
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            GetContactListTask listClients = new GetContactListTask(ContactListAdapter.this);
+            GetMineContactListTask listClients = new GetMineContactListTask(ContactListAdapter.this);
             if (loc != null) {
                 listClients.execute(String.valueOf(offset), String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
             } else {
@@ -80,12 +82,12 @@ public class ContactListAdapter extends ArrayAdapter<Contact> implements GetCont
     }
 
     @Override
-    public void addClients(ContactSearchResult contactSearchResult) {
-        if(contactSearchResult !=null) {
+    public void addClients(ProfessionalSearchResult professionalSearchResult) {
+        if(professionalSearchResult !=null) {
             //this.clear();
-            this.addAll(contactSearchResult.getContacts());
+            this.addAll(professionalSearchResult.getProfessionals());
             this.offset = this.getCount();
-            this.total = contactSearchResult.getTotal();
+            this.total = professionalSearchResult.getTotal();
             fetching = false;
         }else{
             Log.w(this.getClass().getCanonicalName(), "Something when wrong getting clients.");
@@ -94,7 +96,7 @@ public class ContactListAdapter extends ArrayAdapter<Contact> implements GetCont
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Contact contact = this.getItem(position);
+        ProfessionalSearchItem contact = this.getItem(position);
         ViewHolder holder;
         if(position==this.getCount()-1){
             fetchMore();
@@ -103,26 +105,30 @@ public class ContactListAdapter extends ArrayAdapter<Contact> implements GetCont
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.list_client_item, null);
+            convertView = mInflater.inflate(R.layout.list_professional_item, null);
 
             holder = new ViewHolder();
-            holder.client_id = (TextView) convertView.findViewById(R.id.client_row_client_id);
-            holder.name = (TextView) convertView.findViewById(R.id.client_row_name);
-            holder.company = (TextView) convertView.findViewById(R.id.client_row_company);
-            holder.distance = (TextView) convertView.findViewById(R.id.client_row_client_distance);
-            holder.address = (TextView) convertView.findViewById(R.id.client_row_address);
-            holder.image = (ImageView) convertView.findViewById(R.id.client_row_picture);
+            holder.client_id = (TextView) convertView.findViewById(R.id.client_row_professional_id);
+            holder.name = (TextView) convertView.findViewById(R.id.professional_row_name);
+            holder.company = (TextView) convertView.findViewById(R.id.professional_row_company);
+            holder.distance = (TextView) convertView.findViewById(R.id.professional_row_client_distance);
+            holder.address = (TextView) convertView.findViewById(R.id.professional_row_address);
+            holder.image = (ImageView) convertView.findViewById(R.id.professional_row_picture);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
 
-        holder.client_id.setText("# "+ isContentValid(Long.toString(contact.getId())));
+        //holder.client_id.setText("# "+ isContentValid(Long.toString(contact.getId())));
+        holder.client_id.setText(""); //TODO smpiano arreglar
         holder.name.setText(isContentValid(contact.getLastName())+", "+isContentValid(contact.getName()));
-        holder.company.setText(isContentValid(contact.getCompany()));
-        holder.distance.setText(showCoolDistance(getContext(), contact.getDistance()));
-        holder.address.setText(isContentValid(contact.getAddress()));
+        //holder.company.setText(isContentValid(contact.getCompany()));
+        holder.company.setText("");
+        //holder.distance.setText(showCoolDistance(getContext(), contact.getDistance()));
+        holder.distance.setText("");
+        //holder.address.setText(isContentValid(contact.getAddress()));
+        holder.address.setText("");
         if (isContentValid(contact.getThumbnail()).isEmpty()) {
             Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
         } else {

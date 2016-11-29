@@ -1,148 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:fitsSystemWindows="true">
 
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="56dp"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp">
-
-    <!-- Email Label -->
-    <android.support.v7.widget.Toolbar
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar2"
-        app:title="Registro" />
+        android:layout_height="match_parent">
 
-
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <EditText android:id="@+id/activity_registry_input_firstname"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <!-- Your scrolling content -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:weightSum="1">
+
+                <!-- Name Label -->
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <EditText android:id="@+id/activity_registry_input_firstname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:hint="Nombre" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <EditText
+                        android:id="@+id/activity_registry_input_lastname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:hint="Apellido" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <EditText
+                        android:id="@+id/activity_registry_input_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:hint="Email" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText android:id="@+id/activity_registry_input_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:hint="Password"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText
+                        android:id="@+id/activity_registry_input_repassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:hint="Confirmación" />
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <EditText
+                        android:id="@+id/activity_registry_input_birthday"
+                        android:layout_width="164dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Nacimiento"
+                        android:layout_weight="1.04"
+                        android:editable="false" />
+
+                    <Button
+                        android:layout_width="45dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/activity_registry_button_birthday"
+                        android:onClick="showDatePickerDialog"
+                        android:text="..." />
+
+
+                </LinearLayout>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_registry_radiobutton">
+
+                    <RadioButton
+                        android:text="Masculino"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/activity_registry_radio_m"
+                        android:onClick="onRadioButtonClicked" />
+
+                    <RadioButton
+                        android:text="Femenino"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/activity_registry_radio_f" />
+
+                </RadioGroup>
+
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/activity_registry_btn_joinme"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:padding="12dp"
+                    android:text="Unirme" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.AppBarLayout
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="Nombre" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:theme="@style/Base.ThemeOverlay.AppCompat.ActionBar">
 
-            <EditText
-                android:id="@+id/activity_registry_input_lastname"
+            <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Apellido" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="?attr/actionBarSize"
+                android:minHeight="233dp"
+                android:id="@+id/activity_registry_toolbar"
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+        </android.support.design.widget.AppBarLayout>
 
-            <EditText
-                android:id="@+id/activity_registry_input_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/activity_registry_input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText
-                android:id="@+id/activity_registry_input_repassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Confirmación" />
-
-
-        </android.support.design.widget.TextInputLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <DatePicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/activity_registry_input_birthday"
-                android:hint="Nacimiento"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/activity_registry_radiobutton">
-
-            <RadioButton
-                android:text="Masculino"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/activity_registry_radio_m"
-                android:onClick="onRadioButtonClicked" />
-
-            <RadioButton
-                android:text="Femenino"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/activity_registry_radio_f" />
-
-        </RadioGroup>
-
-    </android.support.design.widget.TextInputLayout>
-
-
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/activity_registry_btn_joinme"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:padding="12dp"
-        android:text="Unirme" />
-
-</LinearLayout>
-</ScrollView>
+    </android.support.design.widget.CoordinatorLayout>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ar.fi.uba.jobify.activities;
+package ar.fi.uba.jobify.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,6 +24,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import ar.fi.uba.jobify.activities.MainActivity;
 import fi.uba.ar.jobify.R;
 
 import com.google.firebase.messaging.FirebaseMessagingService;

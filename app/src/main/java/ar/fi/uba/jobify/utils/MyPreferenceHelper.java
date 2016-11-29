@@ -18,18 +18,18 @@ public class MyPreferenceHelper {
         this.context = context;
     }
 
-    public void saveSeller(Professional professional) {
+    public void saveProfessional(Professional professional) {
         MyPreferences pref = new MyPreferences(context);
-        pref.save(context.getString(R.string.shared_pref_current_seller), "");
+        pref.save(context.getString(R.string.shared_pref_current_professional), "");
         Gson gson = new Gson();
         String json = gson.toJson(professional);
-        pref.save(context.getString(R.string.shared_pref_current_seller), json);
+        pref.save(context.getString(R.string.shared_pref_current_professional), json);
     }
 
-    public Professional getSeller() {
+    public Professional getProfessional() {
         MyPreferences pref = new MyPreferences(context);
         Gson gson = new Gson();
-        String json = pref.get(context.getString(R.string.shared_pref_current_seller), "");
+        String json = pref.get(context.getString(R.string.shared_pref_current_professional), "");
         Professional professional = gson.fromJson(json, Professional.class);
         return professional;
     }

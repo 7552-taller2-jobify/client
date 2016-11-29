@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import ar.fi.uba.jobify.domains.ForgotPassword;
 import ar.fi.uba.jobify.domains.Token;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.auth.PostAuthTask;
+import ar.fi.uba.jobify.tasks.auth.GetForgotPasswordTask;
+import ar.fi.uba.jobify.tasks.auth.PostLoginTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.FieldValidator;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -19,7 +21,7 @@ import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 
-public class LoginActivity extends AppCompatActivity implements PostAuthTask.ResultLogin {
+public class LoginActivity extends AppCompatActivity implements PostLoginTask.ResultLogin,GetForgotPasswordTask.ResultForgotPassword {
 
     private static final int REQUEST_SIGNUP = 0;
 
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         loginButton = (Button) findViewById(R.id.activity_login_btn_login);
         emailText = (EditText) findViewById(R.id.activity_login_input_email);
         hostText = (EditText) findViewById(R.id.activity_login_host);
+        hostText.setText(AppSettings.getHost());
         passwordText = (EditText) findViewById(R.id.activity_login_input_password);
 
 
@@ -69,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         loginButton.setEnabled(false);
         if (RestClient.isOnline(this)) {
             AppSettings.setServerHost(hostText.getText().toString());
-            new PostAuthTask(this).execute(emailText.getText().toString(), passwordText.getText().toString());
+            new PostLoginTask(this).execute(emailText.getText().toString(), passwordText.getText().toString());
         }
     }
 
@@ -89,6 +92,12 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
         //moveTaskToBack(true);
     }
 
+    @Override
+    public void onForgotPasswordSuccess(ForgotPassword forgotPassword) {
+        // TODO smpiano test it.
+        passwordText.setText("admin");
+    }
+
     public void onLoginSuccess(Token token) {
         findViewById(R.id.activity_login_btn_login).setEnabled(true);
         progressDialog.dismiss();
@@ -97,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements PostAuthTask.Res
             passwordText.setText("");
         } else {
             MyPreferenceHelper helper = new MyPreferenceHelper(this);
-            helper.saveSeller(token.getProfessional());
+            helper.saveProfessional(token.getProfessional());
             pref.save(getString(R.string.shared_pref_current_token),token.getToken());
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

@@ -9,22 +9,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
-
 import ar.fi.uba.jobify.domains.Professional;
+import ar.fi.uba.jobify.server.RestClient;
+import ar.fi.uba.jobify.tasks.auth.DeleteLogoutTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.CircleTransform;
-import ar.fi.uba.jobify.utils.DateUtils;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
@@ -32,7 +28,7 @@ import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.Logout{
     private static final String TAG = "MainActivity";
 
     DrawerLayout drawerLayout;
@@ -50,14 +46,10 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final MyPreferenceHelper helper = new MyPreferenceHelper(MainActivity.this);
         final MyPreferences pref = new MyPreferences(this);
-        if (helper.getSeller() == null || pref.get(getString(R.string.shared_pref_current_token),"").isEmpty()) {
+        if (helper.getProfessional() == null || pref.get(getString(R.string.shared_pref_current_token),"").isEmpty()) {
             openLoginActivity(drawerLayout);
             return;
         }
-
-        pref.save(getString(R.string.shared_pref_current_order_id), -1L);
-        pref.save(getString(R.string.shared_pref_current_order_status), "");
-        pref.save(getString(R.string.shared_pref_current_schedule_date), DateUtils.formatShortDate(Calendar.getInstance().getTime()));
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             // FIXME:
@@ -65,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
             // Si lo pongo directamente en el onCreate, explota por null
             @Override
             public void onDrawerOpened(View drawerView) {
-                Professional professional = helper.getSeller();
+                Professional professional = helper.getProfessional();
 
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 TextView sellerName = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name));
                 TextView sellerEmail = ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_email));
 
                 if (sellerName != null) {
-                    String fullSellerName = professional.getFullName() + "  (#"+ professional.getId()+")";
+                    String fullSellerName = professional.getFullName();
                     sellerName.setText(fullSellerName);
                     sellerEmail.setText(professional.getEmail());
                     String avatar = isContentValid(professional.getAvatar());
@@ -145,8 +137,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void openLogoutActivity(View view) {
         ShowMessage.toastMessage(getApplicationContext(), "Los Héroes no abandonan!");
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        if (RestClient.isOnline(this)) {
+            String email = (new MyPreferenceHelper(this)).getProfessional().getEmail();
+            String token = (new MyPreferences(this)).get(getString(R.string.shared_pref_current_token),"");
+            new DeleteLogoutTask(this).execute(email, token);
+        }
     }
 
     private void setupNavigationDrawerContent(NavigationView navigationView) {
@@ -175,5 +170,11 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+
+    @Override
+    public void onLogoutSuccess() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

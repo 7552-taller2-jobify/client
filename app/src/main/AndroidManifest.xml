@@ -40,7 +40,7 @@
                 android:value="ar.fi.uba.jobify.activities.MainActivity" />
         </activity>
         <activity
-            android:name="ar.fi.uba.jobify.activities.ContactActivity"
+            android:name="ar.fi.uba.jobify.activities.ProfileActivity"
             android:label="@string/contacts"
             android:parentActivityName="ar.fi.uba.jobify.activities.MyContactsActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -66,9 +66,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ar.fi.uba.jobify.activities.MainActivity" />
         </activity>
-
-        ...
-
     </application>
 
 </manifest>
