@@ -45,8 +45,11 @@ public class DatePickerFragment extends DialogFragment
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, day);
-        EditText e = (EditText) getActivity().findViewById(id);
-        e.setText(DateUtils.formatShortDateArg2(cal.getTime()));
+
+        if (getArguments()!=null) {
+            EditText e = (EditText) getActivity().findViewById(id);
+            e.setText(DateUtils.formatShortDateArg2(cal.getTime()));
+        }
     }
 
     public Calendar getCal() {
