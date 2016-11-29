@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import ar.fi.uba.jobify.exceptions.BusinessException;
+import ar.fi.uba.jobify.utils.DateUtils;
 import ar.fi.uba.jobify.utils.FieldValidator;
 
 /**
@@ -13,38 +14,15 @@ import ar.fi.uba.jobify.utils.FieldValidator;
  */
 public class Professional {
 
-
-
-    /*
-    *  "first_name": string,
-    "last_name": string,
-    "email": string,
-    "birthday": string,
-    "address": {
-      "lat": number,
-      "lon": number
-    }
-    * */
-    private long id;
     private String name;
     private String lastName;
     private String phoneNumber;
     private String email;
     private String avatar;
+    private String thumbnail;
     private Date birthday;
-    private Date dateCreated;
-    private Date lastModified;
 
-    public Professional(long id) {
-        this.id= id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public Professional() {
     }
 
     public String getName() {
@@ -87,28 +65,12 @@ public class Professional {
         this.avatar = avatar;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public String getFullName() {
@@ -123,20 +85,36 @@ public class Professional {
         }
     }
 
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
     public static Professional fromJson(JSONObject json) {
         Professional professional = null;
         try {
-            //professional = new Professional(json.getLong("id"));
-            professional = new Professional(1L);
+            professional = new Professional();
 
             professional.setName(json.getString("first_name"));
             professional.setLastName(json.getString("last_name"));
 
             professional.setEmail(json.getString("email"));
+
             if (json.has("avatar")) {
+                professional.setAvatar(json.getString("avatar"));
+            } else if (json.has("picture")) {
                 professional.setAvatar(json.getString("picture"));
             }
 
+            if (json.has("thumbnail")) {
+                professional.setThumbnail(json.getString("thumbnail"));
+            }
+            if (json.has("birthday")) {
+                professional.setBirthday(DateUtils.parseShortDateArg2(json.getString("birthday")));
+            }
 
         } catch (JSONException e) {
             throw new BusinessException("Error parsing Professional.", e);

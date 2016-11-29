@@ -12,9 +12,10 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-import ar.fi.uba.jobify.activities.ContactActivity;
+import ar.fi.uba.jobify.activities.ProfileActivity;
 import ar.fi.uba.jobify.adapters.ContactListAdapter;
 import ar.fi.uba.jobify.domains.Contact;
+import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import fi.uba.ar.jobify.R;
 
 /**
@@ -31,9 +32,9 @@ public class ContactListFragment extends Fragment implements AdapterView.OnItemC
                              Bundle savedInstanceState) {
 
         View fragmentView= inflater.inflate(R.layout.fragment_contact_list, container, false);
-        ListView clientsList= (ListView)fragmentView.findViewById(R.id.clientListView);
+        ListView clientsList= (ListView)fragmentView.findViewById(R.id.contactListView);
 
-        ContactListAdapter clientsAdapter = new ContactListAdapter( getActivity(), getContext(), R.layout.list_client_item, new ArrayList<Contact>());
+        ContactListAdapter clientsAdapter = new ContactListAdapter( getActivity(), getContext(), R.layout.list_professional_item, new ArrayList<ProfessionalSearchItem>());
         clientsList.setAdapter(clientsAdapter);
         clientsList.setOnItemClickListener(this);
 
@@ -47,7 +48,7 @@ public class ContactListFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Contact contact = (Contact)parent.getItemAtPosition(position);
-        Intent intent = new Intent(getContext(), ContactActivity.class);
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
         intent.putExtra(Intent.EXTRA_UID, contact.getId());
         startActivity(intent);
     }

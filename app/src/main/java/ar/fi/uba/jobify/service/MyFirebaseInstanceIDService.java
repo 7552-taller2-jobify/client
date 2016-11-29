@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ar.fi.uba.jobify.activities;
+package ar.fi.uba.jobify.service;
 
 import android.util.Log;
 

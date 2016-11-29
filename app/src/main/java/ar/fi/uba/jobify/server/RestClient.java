@@ -152,8 +152,7 @@ public class RestClient {
         String errorValue = "";
         try {
             if (json.startsWith("<!DOCTYPE html>")) throw new ServerErrorException("Se cayó el server");
-            JSONObject errorObj = new JSONObject(json);
-            JSONObject error = errorObj.getJSONObject("error");
+            JSONObject error = new JSONObject(json);
             errorKey = error.getString("code");
             errorValue = error.getString("message");
             throw ErrorMatcher.valueOf(errorKey).getThrowable(errorValue,status);

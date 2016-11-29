@@ -13,7 +13,8 @@ public class DateUtils {
 
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     private static final SimpleDateFormat SHORT_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat SHORT_FORMATTER_ARG = new SimpleDateFormat("dd-MM-yyyy");
+    private static final SimpleDateFormat SHORT_FORMATTER_ARG_1 = new SimpleDateFormat("dd-MM-yyyy");
+    private static final SimpleDateFormat SHORT_FORMATTER_ARG_2 = new SimpleDateFormat("dd/MM/yyyy");
 
     private static Date parseDate(String dateStr, SimpleDateFormat format) {
         Date d = null;
@@ -35,10 +36,16 @@ public class DateUtils {
         return parseDate(dateStr,SHORT_FORMATTER);
     }
 
-    public static Date parseShortDateArg(String dateStr) { return parseDate(dateStr,SHORT_FORMATTER_ARG); }
+    public static Date parseShortDateArg1(String dateStr) { return parseDate(dateStr,SHORT_FORMATTER_ARG_1); }
 
-    public static String formatShortDateArg(Date date) {
-        return SHORT_FORMATTER_ARG.format(date);
+    public static String formatShortDateArg1(Date date) {
+        return SHORT_FORMATTER_ARG_1.format(date);
+    }
+
+    public static Date parseShortDateArg2(String dateStr) { return parseDate(dateStr,SHORT_FORMATTER_ARG_2); }
+
+    public static String formatShortDateArg2(Date date) {
+        return SHORT_FORMATTER_ARG_2.format(date);
     }
 
     public static String formatShortDate(Date date) {

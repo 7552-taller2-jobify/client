@@ -6,6 +6,7 @@ package ar.fi.uba.jobify.utils;
 public class AppSettings {
 
     private static String SERVER_HOST = null;
+    private static String HOST = null;
 
     private static final int SERVER_TIMEOUT = 5000; //5seg
     private static final Double GPS_LAT = -34.563424;
@@ -17,7 +18,8 @@ public class AppSettings {
     }
 
     public static void setServerHost(String host){
-        SERVER_HOST = "https://" + host + ":8000";
+        HOST = host;
+        SERVER_HOST = "http://" + host + ":8000";
     }
 
     public static int getServerTimeout() { return SERVER_TIMEOUT; }
@@ -28,5 +30,10 @@ public class AppSettings {
 
     public static String getGpsLon() {
         return GPS_LON.toString();
+    }
+
+    public static String getHost() {
+        if (SERVER_HOST == null) setServerHost("192.168.22.10");
+        return HOST;
     }
 }

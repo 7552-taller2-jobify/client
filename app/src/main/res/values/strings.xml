@@ -69,14 +69,10 @@
     <string name="fragment_main_vendor_name_default">Apellido, Nombre</string>
 
     <string name="shared_pref_file_key">ordertracker_preferences</string>
-    <string name="shared_pref_current_order_id">order_id</string>
-    <string name="shared_pref_current_client_id">client_id</string>
-    <string name="shared_pref_current_order_status">status</string>
     <string name="shared_pref_current_location_lat">lat</string>
     <string name="shared_pref_current_location_lon">lon</string>
-    <string name="shared_pref_current_schedule_date">scheduleDate</string>
-
-    <string name="shared_pref_current_seller">professional</string>
+    <string name="shared_pref_current_token">token</string>
+    <string name="shared_pref_current_professional">professional</string>
 
     <string name="lunes_shorttag">Lun</string>
     <string name="martes_shorttag">Mar</string>
@@ -92,7 +88,7 @@
     <string name="fragment_main_report">Buascar positions</string>
     <string name="daily_route">Ruta Diaria</string>
     <string name="login_leyend">Consigue tu mejor trabajo!</string>
-    <string name="shared_pref_current_token">token</string>
+
 
 
 </resources>

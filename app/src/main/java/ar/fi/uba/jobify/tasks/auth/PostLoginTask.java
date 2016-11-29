@@ -15,9 +15,9 @@ import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.ShowMessage;
 
-public class PostAuthTask extends AbstractTask<String,Void,Token,LoginActivity> {
+public class PostLoginTask extends AbstractTask<String,Void,Token,LoginActivity> {
 
-    public PostAuthTask(LoginActivity activity) {
+    public PostLoginTask(LoginActivity activity) {
         super(activity);
     }
 
