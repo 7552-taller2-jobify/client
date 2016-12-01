@@ -114,7 +114,7 @@ public class ProfessionalSearchItem {
                 professional.setAvatar(json.getString("picture"));
             }
             if (json.has("thumbnail")) {
-                professional.setThumbnail(json.getString("picture"));
+                professional.setThumbnail(json.getString("thumbnail"));
             }
             if (json.has("birthday")) {
                 professional.setBirthday(DateUtils.parseShortDateArg2(json.getString("birthday")));

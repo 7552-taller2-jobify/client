@@ -36,6 +36,7 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
     private boolean fetching;
     private Activity activity;
     private MyPreferences pref = new MyPreferences(getContext());
+    private boolean defaultRequest = true;
 
     public ProfessionalListAdapter(Activity activity, Context context, int resource,
                                    List<ProfessionalSearchItem> professionals) {
@@ -67,18 +68,22 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
             GetUsersTask listProfessionals = new GetUsersTask(ProfessionalListAdapter.this);
-            String offsetStr = String.valueOf(offset);
-            String lat = null;
-            String lon = null;
-            if (loc != null) {
-                lat = String.valueOf(loc.getLatitude());
-                lon = String.valueOf(loc.getLongitude());
-            }
-            String distance = "";
-            String position = "";
-            String skills = "";
+            if (defaultRequest) {
+                listProfessionals.execute();
+            } else {
+                String offsetStr = String.valueOf(offset);
+                String lat = null;
+                String lon = null;
+                if (loc != null) {
+                    lat = String.valueOf(loc.getLatitude());
+                    lon = String.valueOf(loc.getLongitude());
+                }
+                String distance = "";
+                String position = "";
+                String skills = "";
 
-            listProfessionals.execute(offsetStr,lat,lon,distance,position,skills);
+                listProfessionals.execute(offsetStr,lat,lon,distance,position,skills);
+            }
         }
     }
 
