@@ -4,15 +4,18 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import ar.fi.uba.jobify.domains.ForgotPassword;
+import ar.fi.uba.jobify.domains.Register;
 import ar.fi.uba.jobify.domains.Token;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.tasks.auth.GetForgotPasswordTask;
 import ar.fi.uba.jobify.tasks.auth.PostLoginTask;
+import ar.fi.uba.jobify.tasks.auth.PostRegistryTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.FieldValidator;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -20,8 +23,26 @@ import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-public class LoginActivity extends AppCompatActivity implements PostLoginTask.ResultLogin,GetForgotPasswordTask.ResultForgotPassword {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+
+
+public class LoginActivity extends AppCompatActivity implements PostLoginTask.ResultLogin,GetForgotPasswordTask.ResultForgotPassword, PostRegistryTask.ResultRegistry {
 
     private static final int REQUEST_SIGNUP = 0;
 
@@ -31,10 +52,17 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
     private Button loginButton;
     private MyPreferences pref = new MyPreferences(this);
     private ProgressDialog progressDialog;
+    CallbackManager callbackManager;
+    private LoginButton loginButtonFb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Facebook
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        AppEventsLogger.activateApp(this);
+
         setContentView(R.layout.activity_login);
         pref.remove(getString(R.string.shared_pref_current_token));
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -45,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
         hostText = (EditText) findViewById(R.id.activity_login_host);
         hostText.setText(AppSettings.getHost());
         passwordText = (EditText) findViewById(R.id.activity_login_input_password);
+        loginButtonFb = (LoginButton) findViewById(R.id.login_button_fb);
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +83,54 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
                 login();
             }
         });
+        loginButtonFb.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
+        callbackManager = CallbackManager.Factory.create();
+
+        loginButtonFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult){
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                try {
+                                    String email = object.getString("email");
+                                    String birthday = object.getString("birthday");
+                                    String id = object.getString("id");
+                                    String name = object.getString("name");
+                                    Log.d("email", email);
+                                    Log.d("birthday", birthday);
+                                    Log.d("id", id);
+                                    Log.d("name", name);
+                                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                                    Log.d("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender, birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
     }
 
     public void login() {
@@ -79,11 +156,14 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
+       /* if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
                 this.finish();
             }
         }
+        */
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -173,4 +253,15 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
         }
     }
 
+    @Override
+    public void onRegistrySuccess(Register register) {
+
+        if (register == null) {
+            Log.d("OnRegistrySucces","register == null");
+
+        } else {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
 }
