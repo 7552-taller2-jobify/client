@@ -57,13 +57,13 @@ public class DeleteExpertisePositionTask extends AbstractTask<String,Void,String
     protected void onPostExecute(String expertiseList) {
         super.onPostExecute(expertiseList);
         if(expertiseList != null){
-            ((ProfileRead) weakReference.get()).onProfileExpertisePositionDestroySuccess();
+            ((ProfileDestroy) weakReference.get()).onProfileExpertisePositionDestroySuccess();
         } else {
             weakReference.get().showSnackbarSimpleMessage("No se puede eliminar perfil expertise position");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileDestroy {
         public void onProfileExpertisePositionDestroySuccess();
     }
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.List;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
@@ -35,7 +36,7 @@ import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
-public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> implements GetExpertiseTask.ProfileRead {
+public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> implements GetExpertiseTask.ProfileRead, Serializable {
 
     private long total;
     private long offset;

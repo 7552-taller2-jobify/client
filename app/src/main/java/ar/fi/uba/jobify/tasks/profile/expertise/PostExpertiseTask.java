@@ -70,13 +70,13 @@ public class PostExpertiseTask extends AbstractTask<String,Void,String,ProfileAc
     protected void onPostExecute(String expertiseList) {
         super.onPostExecute(expertiseList);
         if(expertiseList != null){
-            ((ProfileRead) weakReference.get()).onProfileExpertiseCreationSuccess();
+            ((ProfileCreate) weakReference.get()).onProfileExpertiseCreationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede crear perfil expertise position");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileCreate {
         public void onProfileExpertiseCreationSuccess();
     }
 

@@ -73,13 +73,13 @@ public class PutExpertiseTask extends AbstractTask<String,Void,String,ProfileAct
     protected void onPostExecute(String expertiseList) {
         super.onPostExecute(expertiseList);
         if(expertiseList != null){
-            ((ProfileRead) weakReference.get()).onProfileExpertiseModificationSuccess();
+            ((ProfileEdit) weakReference.get()).onProfileExpertiseModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modifcar perfil expertise position");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileEdit {
         public void onProfileExpertiseModificationSuccess();
     }
 

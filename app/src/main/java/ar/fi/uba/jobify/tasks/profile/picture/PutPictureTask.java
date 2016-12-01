@@ -58,13 +58,13 @@ public class PutPictureTask extends AbstractTask<String,Void,String,ProfileActiv
     protected void onPostExecute(String picture) {
         super.onPostExecute(picture);
         if(picture != null){
-            ((ProfileRead) weakReference.get()).onProfilePictureModificationSuccess();
+            ((ProfileEdit) weakReference.get()).onProfilePictureModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modificar el perfil picture");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileEdit {
         public void onProfilePictureModificationSuccess();
     }
 

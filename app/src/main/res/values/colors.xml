@@ -4,6 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="colorEditionMode">#e8f9ee22</color>
+    <color name="colorSaveButton">#de36d411</color>
+    <color name="colorCancelButton">#d9da1a27</color>
+
     <color name="statusConfirmed">#c8e6c9</color>
     <color name="statusCancelled">#ff0000</color>
     <color name="statusDraft">#1565c0</color>

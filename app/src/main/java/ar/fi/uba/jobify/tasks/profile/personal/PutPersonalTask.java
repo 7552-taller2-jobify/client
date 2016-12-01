@@ -73,13 +73,13 @@ public class PutPersonalTask extends AbstractTask<String,Void,String,ProfileActi
     protected void onPostExecute(String personal) {
         super.onPostExecute(personal);
         if(personal != null){
-            ((ProfileRead) weakReference.get()).onProfilePersonalModificationSuccess();
+            ((ProfileEdit) weakReference.get()).onProfilePersonalModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modificar perfil personal");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileEdit {
         public void onProfilePersonalModificationSuccess();
     }
 
