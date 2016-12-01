@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
@@ -23,7 +24,7 @@ import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
-public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetSkillsTask.ProfileRead {
+public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetSkillsTask.ProfileRead, Serializable {
 
     private long total;
     private long offset;

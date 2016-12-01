@@ -20,8 +20,14 @@ import fi.uba.ar.jobify.R;
  */
 public class SkillListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private SkillListAdapter skillListAdapter;
+
     public SkillListFragment() {
         super();
+    }
+
+    public SkillListAdapter getAdapter() {
+        return skillListAdapter;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class SkillListFragment extends Fragment implements AdapterView.OnItemCli
         ListView contactsList = (ListView) fragmentView.findViewById(R.id.skillListView);
 
         //Defino el adapter
-        SkillListAdapter skillListAdapter = new SkillListAdapter(
+        skillListAdapter = new SkillListAdapter(
                 getActivity(),
                 getContext(),
                 R.layout.list_skill_item,

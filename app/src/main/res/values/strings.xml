@@ -42,12 +42,12 @@
     <string name="shared_pref_current_token">token</string>
     <string name="shared_pref_current_professional">professional</string>
 
-    <string name="fragment_main_report">Buscar</string>
+    <string name="fragment_main_report">Votos</string>
 
     <!-- leyends -->
     <string name="login_leyend">Consigue tu mejor trabajo!</string>
     <string name="forgot_pass">Olvidé la contraseña!?</string>
-    <string name="goodby_message">Vuelve pronto!</string>
+    <string name="goodby_message">Gracias, vuelva pronto!</string>
     <string name="registry">Unirme</string>
     <string name="login_button">Login</string>
     <string name="zero_contacts">Conéctate! Aún no tienes contactos!</string>
@@ -74,6 +74,23 @@
     <string name="zero_skills">No Tiene Skills</string>
     <string name="profile_detail_gender_m">Masculino</string>
     <string name="profile_detail_gender_f">Femenino</string>
+    <string name="profile_save_current_address">Posición actual</string>
+    <string name="profile_photo_label">Foto URL</string>
+    <string name="profile_photo">http://</string>
+    <string name="profile_photo_text">Foto</string>
+
+    <!-- edition mode -->
+    <string name="personal_edition_add">Agregar</string>
+    <string name="menu_profile_edition_item_remove">Borrar</string>
+    <string name="personal_edition_expertise_item_company">Company</string>
+    <string name="personal_edition_expertise_item_position">Position</string>
+    <string name="personal_edition_expertise_item_from">Desde</string>
+    <string name="personal_edition_expertise_item_to">Hasta</string>
+    <string name="personal_edition_expertise_item_expertise">Experiencia</string>
+    <string name="personal_edition_expertise_item_category">Categoria</string>
+    <string name="personal_edition_skill_item_category">Categoria</string>
+    <string name="personal_edition_skill_item_skills">Skills</string>
+    <string name="personal_edition_exit">Salir</string>
 
 
 </resources>

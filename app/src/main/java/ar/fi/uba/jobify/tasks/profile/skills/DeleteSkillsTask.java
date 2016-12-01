@@ -55,13 +55,13 @@ public class DeleteSkillsTask extends AbstractTask<String,Void,String,ProfileAct
     protected void onPostExecute(String skillList) {
         super.onPostExecute(skillList);
         if(skillList != null){
-            ((ProfileRead) weakReference.get()).onProfileSkillDestroySuccess();
+            ((ProfileDestroy) weakReference.get()).onProfileSkillDestroySuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modificar perfil skills");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileDestroy {
         public void onProfileSkillDestroySuccess();
     }
 

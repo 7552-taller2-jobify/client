@@ -86,13 +86,6 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
             setupNavigationDrawerContent(navigationView);
         }
 
-        //setupNavigationDrawerContent(navigationView);
-
-        this.startCleanUpUI();
-
-//        ((TextView) navigationView.findViewById(R.id.nav_header_main_vendor_name)).setText("Vendedor #" + AppSettings.getSellerId());
-
-        // -----
         //Tomo los ultimos datos, si no tengo nada tomo los hardcoded.
         String lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
         String lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
@@ -118,10 +111,6 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
             position = "POS lat="+loc.getLatitude()+" lon="+ loc.getLongitude();
         }
         ((TextView) findViewById(R.id.fragment_main_vendor_name)).setText(position);
-    }
-
-    private void startCleanUpUI() {
-        ((TextView)findViewById(R.id.dashboard_draft_orders)).setText("");
     }
 
     public void openMyClientsActivity(View view) {

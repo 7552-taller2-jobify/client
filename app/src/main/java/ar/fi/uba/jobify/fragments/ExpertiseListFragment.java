@@ -24,8 +24,14 @@ import fi.uba.ar.jobify.R;
  */
 public class ExpertiseListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private ExpertiseListAdapter expertiseListAdapter;
+
     public ExpertiseListFragment() {
         super();
+    }
+
+    public ExpertiseListAdapter getAdapter() {
+        return expertiseListAdapter;
     }
 
     @Override
@@ -37,7 +43,7 @@ public class ExpertiseListFragment extends Fragment implements AdapterView.OnIte
         ListView contactsList = (ListView) fragmentView.findViewById(R.id.expertiseListView);
 
         //Defino el adapter
-        ExpertiseListAdapter expertiseListAdapter = new ExpertiseListAdapter(
+        expertiseListAdapter = new ExpertiseListAdapter(
                 getActivity(),
                 getContext(),
                 R.layout.list_expertise_item,

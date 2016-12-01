@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -13,8 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.KeyListener;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -27,13 +30,19 @@ import ar.fi.uba.jobify.domains.ProfilePicture;
 import ar.fi.uba.jobify.domains.ProfileSummary;
 import ar.fi.uba.jobify.fragments.DatePickerFragment;
 import ar.fi.uba.jobify.fragments.ExpertiseListFragment;
+import ar.fi.uba.jobify.fragments.PersonalEditionFragment;
 import ar.fi.uba.jobify.fragments.SkillListFragment;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.service.InverseGeocodeService;
 import ar.fi.uba.jobify.tasks.profile.personal.GetPersonalTask;
+import ar.fi.uba.jobify.tasks.profile.personal.PutPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.picture.GetPictureTask;
+import ar.fi.uba.jobify.tasks.profile.picture.PutPictureTask;
 import ar.fi.uba.jobify.tasks.profile.summary.GetSummaryTask;
+import ar.fi.uba.jobify.tasks.profile.summary.PutSummaryTask;
+import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.DateUtils;
+import ar.fi.uba.jobify.utils.LocationHelper;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
@@ -49,10 +58,14 @@ public class ProfileActivity extends AppCompatActivity
         ExpertiseListAdapter.ExpertisesRead,
         SkillListAdapter.SkillRead,
         View.OnClickListener,
-        InverseGeocodeService.InverseGeocodeServiceResult {
+        InverseGeocodeService.InverseGeocodeServiceResult,
+        PutPersonalTask.ProfileEdit,
+        PutSummaryTask.ProfileEdit,
+        PutPictureTask.ProfileEdit {
 
     private MyPreferences pref;
     private MyPreferenceHelper helper;
+    private LocationHelper locationHelper;
     private String professionalId;
 
     private ImageView personalPhoto;
@@ -62,10 +75,18 @@ public class ProfileActivity extends AppCompatActivity
     private EditText personalBirthday;
     private Button personalBirthdayButton;
     private TextView personalGender;
+    private RadioGroup personalGenderRadioGroup;
+    private RadioButton personalGenderRadioMale;
+    private RadioButton personalGenderRadioFemale;
     private TextView personalAddress;
+    private CheckBox personalAddressCheck;
     private ImageView personalMap;
     private EditText personalSummary;
     private TextView personalSummaryLabel;
+
+    //photo
+    private CardView profilePhotoView;
+    private EditText profileDetailPhoto;
 
     //expertises
     private CardView expertisesView;
@@ -75,11 +96,25 @@ public class ProfileActivity extends AppCompatActivity
     private CardView skillsView;
     private TextView profileSkillsLabel;
 
+    private Boolean isReadMode = true;
 
-
-    private FloatingActionButton fab;
+    private FloatingActionButton fabEditMode;
+    private FloatingActionButton fabCancel;
+    private FloatingActionButton fabSave;
+    private FloatingActionButton fabExpertiseEditMode;
+    private FloatingActionButton fabSkillEditMode;
     private CollapsingToolbarLayout toolbarName;
     private DatePickerFragment birthdayFragment;
+
+    //read elements
+    private ProfilePersonal personal;
+    private ProfileSummary summary;
+    private ProfilePicture picture;
+    private boolean afterPersonalSave = false;
+    private boolean afterPictureSave = false;
+    private Professional professionalUpdated;
+    private ExpertiseListFragment expertiseListFragment;
+    private SkillListFragment skillListFragment;
 
 
     @Override
@@ -99,6 +134,7 @@ public class ProfileActivity extends AppCompatActivity
         String intentExtraUid = intent.getStringExtra(Intent.EXTRA_UID);
         if (intentExtraUid != null) professionalId = intentExtraUid;
 
+
         if (RestClient.isOnline(this)) {
             new GetPersonalTask(this).execute(professionalId);
             new GetSummaryTask(this).execute(professionalId);
@@ -108,13 +144,15 @@ public class ProfileActivity extends AppCompatActivity
 
         // inflating the expertise fragment
         expertisesView = (CardView) findViewById(R.id.profile_view_expertises);
+        expertiseListFragment = new ExpertiseListFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.profile_view_expertises, new ExpertiseListFragment()).commit();
+                .add(R.id.profile_view_expertises, expertiseListFragment).commit();
 
         //inflating the skills fragment
         skillsView = (CardView) findViewById(R.id.profile_view_skills);
+        skillListFragment = new SkillListFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.profile_view_skills, new SkillListFragment()).commit();
+                .add(R.id.profile_view_skills, skillListFragment).commit();
 
 
         // TODO edition time.
@@ -125,10 +163,17 @@ public class ProfileActivity extends AppCompatActivity
         personalBirthday = (EditText) findViewById(R.id.profile_detail_birthday);
         personalBirthdayButton = (Button) findViewById(R.id.profile_edit_button_birthday);
         personalGender = (TextView) findViewById(R.id.profile_detail_gender);
+        personalGenderRadioGroup = (RadioGroup) findViewById(R.id.profile_detail_gender_radiobutton);
+        personalGenderRadioMale = (RadioButton) findViewById(R.id.profile_detail_gender_radio_m);
+        personalGenderRadioFemale = (RadioButton) findViewById(R.id.profile_detail_gender_radio_f);
         personalAddress = ((TextView) findViewById(R.id.profile_detail_address));
+        personalAddressCheck = ((CheckBox) findViewById(R.id.profile_detail_address_check));
         personalMap = (ImageView) findViewById(R.id.profile_detail_map);
         personalSummary = (EditText) findViewById(R.id.profile_detail_summary);
         personalSummaryLabel = (TextView) findViewById(R.id.profile_detail_summary_label);
+
+        profilePhotoView = (CardView) findViewById(R.id.profile_detail_photo_card);
+        profileDetailPhoto = (EditText) findViewById(R.id.profile_detail_photo);
 
         //expertises
         profileExpertisesLabel = (TextView) findViewById(R.id.profile_detail_expertises_label);
@@ -136,24 +181,29 @@ public class ProfileActivity extends AppCompatActivity
         //skills
         profileSkillsLabel = (TextView) findViewById(R.id.profile_detail_skills_label);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fabEditMode = (FloatingActionButton) findViewById(R.id.fab_edit_mode);
+        fabCancel = (FloatingActionButton) findViewById(R.id.fab_cancel);
+        fabSave = (FloatingActionButton) findViewById(R.id.fab_save);
+        fabExpertiseEditMode = (FloatingActionButton) findViewById(R.id.fab_expertise_edit_mode);
+        fabSkillEditMode = (FloatingActionButton) findViewById(R.id.fab_skill_edit_mode);
         toolbarName = (CollapsingToolbarLayout) findViewById(R.id.profile_detail_collapsing_toolbar);
+
 
         personalEmail.setOnClickListener(this);
         personalEmailIcon.setOnClickListener(this);
-        personalName.setOnClickListener(this);
-        personalBirthday.setOnClickListener(this);
-        personalGender.setOnClickListener(this);
-        personalAddress.setOnClickListener(this);
-        fab.setOnClickListener(this);
+        fabEditMode.setOnClickListener(this);
+        fabCancel.setOnClickListener(this);
+        fabSave.setOnClickListener(this);
+        fabExpertiseEditMode.setOnClickListener(this);
+        fabSkillEditMode.setOnClickListener(this);
 
-        this.startCleanUpUI(true);
+        this.startCleanUpUI();
     }
 
-    private void startCleanUpUI(Boolean isReadMode) {
+    private void startCleanUpUI() {
 
-        profileExpertisesLabel.setVisibility(View.INVISIBLE);
-        profileSkillsLabel.setVisibility(View.INVISIBLE);
+        profileExpertisesLabel.setVisibility(View.GONE);
+        profileSkillsLabel.setVisibility(View.GONE);
 
         if (isReadMode) {
             toolbarName.setTitle("");
@@ -164,7 +214,6 @@ public class ProfileActivity extends AppCompatActivity
             personalGender.setText("");
             personalAddress.setText("");
 
-            personalEmail.setTag(personalEmail.getKeyListener());
             personalEmail.setKeyListener(null);
             personalName.setTag(personalName.getKeyListener());
             personalName.setKeyListener(null);
@@ -172,19 +221,46 @@ public class ProfileActivity extends AppCompatActivity
             personalBirthday.setKeyListener(null);
             personalSummary.setTag(personalSummary.getKeyListener());
             personalSummary.setKeyListener(null);
-            personalAddress.setTag(personalAddress.getKeyListener());
-            personalAddress.setKeyListener(null);
+            personalAddressCheck.setVisibility(View.GONE);
 
-            personalBirthdayButton.setVisibility(View.INVISIBLE);
-            personalSummaryLabel.setVisibility(View.INVISIBLE);
+            personalGender.setVisibility(View.VISIBLE);
+            personalGenderRadioGroup.setVisibility(View.GONE);
+            personalGenderRadioMale.setVisibility(View.GONE);
+            personalGenderRadioFemale.setVisibility(View.GONE);
+
+            personalBirthdayButton.setVisibility(View.GONE);
+            personalSummaryLabel.setVisibility(View.GONE);
+
+            profilePhotoView.setVisibility(View.GONE);
+
+            // es la misma persona y puede editar
+            if (professionalId.equals(helper.getProfessional().getEmail())) {
+                fabCancel.setVisibility(View.GONE);
+                fabSave.setVisibility(View.GONE);
+                fabEditMode.setVisibility(View.VISIBLE);
+                fabExpertiseEditMode.setVisibility(View.GONE);
+                fabSkillEditMode.setVisibility(View.GONE);
+            }
+
+
         } else {
-            personalEmail.setKeyListener((KeyListener) personalEmail.getTag());
             personalName.setKeyListener((KeyListener) personalName.getTag());
-            personalBirthday.setKeyListener((KeyListener) personalBirthday.getTag());
+            //personalBirthday.setKeyListener((KeyListener) personalBirthday.getTag());
             personalBirthdayButton.setVisibility(View.VISIBLE);
             personalSummaryLabel.setVisibility(View.VISIBLE);
             personalSummary.setKeyListener((KeyListener) personalSummary.getTag());
-            personalAddress.setKeyListener((KeyListener) personalAddress.getTag());
+
+            personalAddress.setText(getString(R.string.profile_save_current_address));
+            personalAddressCheck.setVisibility(View.VISIBLE);
+
+            if (personalGender.getText().toString().equals("Hombre")) personalGenderRadioMale.setChecked(true);
+            else personalGenderRadioFemale.setChecked(true);
+            personalGenderRadioGroup.setVisibility(View.VISIBLE);
+            personalGenderRadioMale.setVisibility(View.VISIBLE);
+            personalGenderRadioFemale.setVisibility(View.VISIBLE);
+            personalGender.setVisibility(View.GONE);
+
+            profilePhotoView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -194,22 +270,92 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if (view.getId()==R.id.fab) {
-            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.profile_detail_coordinatorLayout);
-            ShowMessage.showSnackbarSimpleMessage(cl, "No se hace nada");
-            //if (this.draftOrders == null) {
-            //    ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
-            //} else if (this.draftOrders.size() > 0) {
-            //    // si hay orden, mostrar mensaje diciendo que ya existe una orden "activa"
-            //    ShowMessage.showSnackbarSimpleMessage(cl, "Ya existe un pedido borrador en curso!");
-            //} else {
-            //    // si no hay orden, crear una nueva
-            //Cuidado que cambio todo
-            //    if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_seller), 1L).toString(), Long.toString(professionalId));
-            //}
+        // seleccionan en editar
+        if (view.getId()==R.id.fab_edit_mode) {
+            isReadMode = false;
+            fabEditMode.setVisibility(View.GONE);
+            fabCancel.setVisibility(View.VISIBLE);
+            fabSave.setVisibility(View.VISIBLE);
+            fabExpertiseEditMode.setVisibility(View.VISIBLE);
+            fabSkillEditMode.setVisibility(View.VISIBLE);
+
+            locationHelper = new LocationHelper();
+            locationHelper.updatePosition(this);
+
+            String lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+            String lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+            updateMap(lat, lon);
+
+            startCleanUpUI();
         }
+
+
+        if (view.getId()==R.id.fab_save) {
+
+            String[] name = personalName.getText().toString().split(",");
+            String firstName = "";
+            if (name.length > 0) firstName = name[1].trim();
+            String lat;
+            String lon;
+            if (personalAddressCheck.isChecked()) {
+                lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+                lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+            } else {
+                lat = personal.getLat();
+                lon = personal.getLon();
+            }
+            new PutPersonalTask(this).execute(firstName,personalName.getText().toString().split(",")[0].trim(),
+                    personalBirthday.getText().toString(),personalGenderRadioMale.isChecked()?"M":"F",
+                    lat, lon);
+
+            // summary
+            new PutSummaryTask(this).execute(personalSummary.getText().toString());
+
+            //photo
+            new PutPictureTask(this).execute(profileDetailPhoto.getText().toString());
+
+
+
+            // TODO smpiano save all.
+            isReadMode = true;
+            startCleanUpUI();
+        }
+
+        if (view.getId()==R.id.fab_cancel) {
+            isReadMode = true;
+            startCleanUpUI();
+
+            // restarting
+            onProfilePersonalSuccess(personal);
+            onProfileSummarySuccess(summary);
+            onProfilePictureSuccess(picture);
+        }
+
+        if (view.getId()==R.id.fab_expertise_edit_mode) {
+
+            PersonalEditionFragment personalEditionFragment = new PersonalEditionFragment();
+            Bundle args = new Bundle();
+            args.putSerializable("personalEditionAdapter", expertiseListFragment.getAdapter());
+            args.putString("layout", "expertise");
+            personalEditionFragment.setArguments(args);
+            personalEditionFragment.show(getSupportFragmentManager(), "");
+
+        }
+
+        if (view.getId()==R.id.fab_skill_edit_mode) {
+
+            PersonalEditionFragment personalEditionFragment = new PersonalEditionFragment();
+            Bundle args = new Bundle();
+            args.putSerializable("personalEditionAdapter", skillListFragment.getAdapter());
+            args.putString("layout", "skill");
+            personalEditionFragment.setArguments(args);
+            personalEditionFragment.show(getSupportFragmentManager(), "");
+
+        }
+
+        // Envio al servicio de mail
         if((view.getId() == R.id.profile_detail_email || view.getId() == R.id.profile_detail_email_icon)
-                && isValidMail(personalEmail.getText())){
+                && isValidMail(personalEmail.getText()) && isReadMode){
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                     "mailto",personalEmail.getText().toString().trim(), null));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[Jobify] - Mensaje de "+helper.getProfessional().getFullName());
@@ -217,19 +363,9 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
-    public void updatePhoto(Professional professional){
-
-    }
-
-    public void updateMap(ProfilePersonal personal) {
-        // validacion
-        if (personal.getLat().isEmpty() || personal.getLon().isEmpty()) {
-            ShowMessage.toastMessage(this,getString(R.string.cannot_display_map));
-            return;
-        }
-
+    public void updateMap(String lat, String lon) {
         //llamo al servicio externo
-        InverseGeocodeService addressService = new InverseGeocodeService(this,personal.getLat(),personal.getLon());
+        InverseGeocodeService addressService = new InverseGeocodeService(this,lat,lon);
 
         // Pongo el punto en el mapa estatico
         String mapURL="https://maps.googleapis.com/maps/api/staticmap?" +
@@ -237,13 +373,14 @@ public class ProfileActivity extends AppCompatActivity
                 "&size=400x300" +
                 "&maptype=roadmap" +
                 "&key=AIzaSyAyta4hXfctjxRTFWd2zKKeDCpVe3Qa-1E" +
-                "&center="+ personal.getLat()+','+ personal.getLon()+
-                "&markers=color:blue%7C"+ personal.getLat()+','+ personal.getLon();
+                "&center="+ lat+','+ lon+
+                "&markers=color:blue%7C"+ lat+','+ lon;
         Picasso.with(this).load(mapURL).into(personalMap);
     }
 
     @Override
     public void onInverseCalculationSuccess(String address) {
+        if (!isReadMode) return;
         if (address.isEmpty()) {
             ShowMessage.toastMessage(this,getString(R.string.cannot_inverse_address_calc));
         } else {
@@ -253,6 +390,20 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onProfilePersonalSuccess(ProfilePersonal personal) {
+        this.personal = personal;
+
+        if (afterPersonalSave) {
+            this.professionalUpdated = new Professional();
+            professionalUpdated.setEmail(personal.getEmail());
+            professionalUpdated.setName(personal.getFirstName());
+            professionalUpdated.setLastName(personal.getLastName());
+            professionalUpdated.setBirthday(personal.getBirthday());
+            professionalUpdated.setGender(personal.getGender());
+            professionalUpdated.setLat(personal.getLat());
+            professionalUpdated.setLon(personal.getLon());
+            afterPersonalSave =false;
+        }
+
         Integer edad = DateUtils.getEdad(personal.getBirthday());
         toolbarName.setTitle(isContentValid(personal.getFirstName())+" ("+edad+" años)");
 
@@ -262,8 +413,6 @@ public class ProfileActivity extends AppCompatActivity
         personalGender.setText(getString((isContentValid(personal.getGender()).equals("M"))? R.string.masculino : R.string.femenino));
 
 
-        //personalAddress.setText(isContentValid(professional.getAddress()));
-
         //Coloreando el email para la action.
         int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
         personalEmail.setText(isContentValid(personal.getEmail()));
@@ -272,8 +421,14 @@ public class ProfileActivity extends AppCompatActivity
             personalEmail.setTextColor(colorAccent);
         }
 
+
+        // validacion
+        if (personal.getLat().isEmpty() || personal.getLon().isEmpty()) {
+            ShowMessage.toastMessage(this,getString(R.string.cannot_display_map));
+            return;
+        }
         //actualizo mapa
-        updateMap(personal);
+        updateMap(personal.getLat(), personal.getLon());
     }
 
     public void showDatePickerDialog(View view) {
@@ -286,6 +441,7 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onProfileSummarySuccess(ProfileSummary summary) {
+        this.summary = summary;
         if (summary != null && !summary.getSummary().isEmpty()) {
             personalSummary.setText(isContentValid(summary.getSummary()));
         } else {
@@ -305,10 +461,38 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onProfilePictureSuccess(ProfilePicture picture) {
+        this.picture = picture;
+
+        if (afterPictureSave) {
+            professionalUpdated.setAvatar(picture.getPicture());
+            helper.saveProfessional(professionalUpdated);
+            afterPictureSave =false;
+        }
+
         if (isContentValid(picture.getPicture()).isEmpty()) {
             Picasso.with(this).load(R.drawable.logo).into(personalPhoto);
         } else {
+            profileDetailPhoto.setText(picture.getPicture());
             Picasso.with(this).load(picture.getPicture()).into(personalPhoto);
         }
+    }
+
+
+    // EDITION satisfied
+    @Override
+    public void onProfilePersonalModificationSuccess() {
+        new GetPersonalTask(this).execute(professionalId);
+        afterPersonalSave = true; // controla el profesional que manejamos
+    }
+
+    @Override
+    public void onProfilePictureModificationSuccess() {
+        new GetPictureTask(this).execute(professionalId);
+    }
+
+    @Override
+    public void onProfileSummaryModificationSuccess() {
+        new GetSummaryTask(this).execute(professionalId);
+        afterPictureSave = true; // controla el profesional que manejamos
     }
 }

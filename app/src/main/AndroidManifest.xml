@@ -42,11 +42,11 @@
         <activity
             android:name="ar.fi.uba.jobify.activities.ProfileActivity"
             android:label="@string/menu_profile"
-            android:parentActivityName="ar.fi.uba.jobify.activities.MyContactsActivity"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ar.fi.uba.jobify.activities.MyContactsActivity" />
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
         </activity>
         <activity
             android:name="ar.fi.uba.jobify.activities.LoginActivity"
@@ -59,6 +59,24 @@
         </activity>
         <activity
             android:name="ar.fi.uba.jobify.activities.RegistryActivity"
+            android:label="Registry"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="ar.fi.uba.jobify.activities.SearchActivity"
+            android:label="Registry"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="ar.fi.uba.jobify.activities.ChatActivity"
             android:label="Registry"
             android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

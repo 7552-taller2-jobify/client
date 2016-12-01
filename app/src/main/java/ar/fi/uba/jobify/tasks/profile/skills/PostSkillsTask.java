@@ -60,13 +60,13 @@ public class PostSkillsTask extends AbstractTask<String,Void,String,ProfileActiv
     protected void onPostExecute(String skillList) {
         super.onPostExecute(skillList);
         if(skillList != null){
-            ((ProfileRead) weakReference.get()).onProfileSkillCreationSuccess();
+            ((ProfileCreate) weakReference.get()).onProfileSkillCreationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede crear perfil skills");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileCreate {
         public void onProfileSkillCreationSuccess();
     }
 

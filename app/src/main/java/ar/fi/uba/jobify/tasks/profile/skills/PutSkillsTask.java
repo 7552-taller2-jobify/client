@@ -61,13 +61,13 @@ public class PutSkillsTask extends AbstractTask<String,Void,String,ProfileActivi
     protected void onPostExecute(String skillList) {
         super.onPostExecute(skillList);
         if(skillList != null){
-            ((ProfileRead) weakReference.get()).onProfileSkillModificationSuccess();
+            ((ProfileEdit) weakReference.get()).onProfileSkillModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modificar perfil skills");
         }
     }
 
-    public interface ProfileRead {
+    public interface ProfileEdit {
         public void onProfileSkillModificationSuccess();
     }
 
