@@ -3,10 +3,8 @@ package ar.fi.uba.jobify.tasks.profile.picture;
 import android.content.Context;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.domains.ProfilePicture;
 import ar.fi.uba.jobify.exceptions.BusinessException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -60,13 +58,13 @@ public class PutPictureTask extends AbstractTask<String,Void,String,ProfileActiv
     protected void onPostExecute(String picture) {
         super.onPostExecute(picture);
         if(picture != null){
-            ((PerfilRead) weakReference.get()).onProfilePictureModificationSuccess();
+            ((ProfileRead) weakReference.get()).onProfilePictureModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modificar el perfil picture");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfilePictureModificationSuccess();
     }
 

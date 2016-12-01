@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -54,5 +55,12 @@ public class DateUtils {
 
     public static String formatDate(Date date) {
         return FORMATTER.format(date);
+    }
+
+    public static Integer getEdad(Date birthday) {
+        Calendar c = Calendar.getInstance();
+        long timeBetween = c.getTime().getTime() - birthday.getTime();
+        double yearsBetween = timeBetween / 3.156e+10;
+        return (int) Math.floor(yearsBetween);
     }
 }

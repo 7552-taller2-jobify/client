@@ -56,14 +56,15 @@ public class GetSummaryTask extends AbstractTask<String,Void,ProfileSummary,Prof
     @Override
     protected void onPostExecute(ProfileSummary summary) {
         super.onPostExecute(summary);
+
         if(summary != null){
-            ((PerfilRead) weakReference.get()).onProfileSummarySuccess(summary);
+            ((ProfileRead) weakReference.get()).onProfileSummarySuccess(summary);
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede obtener perfil summary");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileSummarySuccess(ProfileSummary summary);
     }
 

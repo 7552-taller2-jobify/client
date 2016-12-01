@@ -94,8 +94,10 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
 
     @Override
     public void onForgotPasswordSuccess(ForgotPassword forgotPassword) {
-        // TODO smpiano test it.
-        passwordText.setText("admin");
+        if (forgotPassword != null) {
+            passwordText.setText(forgotPassword.getPass());
+            ShowMessage.toastMessage(getApplicationContext(),"Su constraseña fue reiniciada por ["+forgotPassword.getPass()+"]");
+        }
     }
 
     public void onLoginSuccess(Token token) {
@@ -153,6 +155,22 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
     public void registry(View view) {
         Intent intent = new Intent(this, RegistryActivity.class);
         startActivity(intent);
+    }
+
+    public void onClickForgotPass(View view) {
+        String email = emailText.getText().toString();
+        boolean valid = true;
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailText.setError("Ingrese un email válido!");
+            valid = false;
+        } else {
+            emailText.setError(null);
+        }
+
+        if (RestClient.isOnline(this) && valid) {
+            AppSettings.setServerHost(hostText.getText().toString());
+            new GetForgotPasswordTask(this).execute(email);
+        }
     }
 
 }

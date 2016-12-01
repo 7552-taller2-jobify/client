@@ -4,10 +4,7 @@ import android.content.Context;
 
 import org.json.JSONException;
 
-import java.util.List;
-
 import ar.fi.uba.jobify.activities.MyContactsActivity;
-import ar.fi.uba.jobify.domains.Contact;
 import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -19,7 +16,6 @@ import fi.uba.ar.jobify.R;
 public class DeleteVoteTask extends AbstractTask<String,Void,String,MyContactsActivity> {
 
     private final MyPreferences pref;
-    private List<Contact> contacts;
     private MyPreferenceHelper helper;
 
     public DeleteVoteTask(MyContactsActivity activity) {

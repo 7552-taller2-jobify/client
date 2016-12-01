@@ -10,13 +10,17 @@ android:fitsSystemWindows="true">
     android:layout_height="wrap_content"
     android:paddingTop="56dp"
     android:paddingLeft="24dp"
-    android:paddingRight="24dp">
+    android:paddingRight="24dp"
+    android:weightSum="1">
 
     <ImageView android:src="@drawable/logo"
         android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:layout_marginBottom="24dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.13"
+        android:minHeight="92dp"
+        android:minWidth="92dp" />
 
     <!-- Email Label -->
     <TextView android:id="@+id/activity_login_link_signup"
@@ -74,7 +78,7 @@ android:fitsSystemWindows="true">
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:padding="12dp"
-        android:text="Login"/>
+        android:text="@string/login_button"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -84,14 +88,14 @@ android:fitsSystemWindows="true">
         android:minHeight="50dp">
 
         <TextView
-            android:text="Olvidé la contraseña!?"
+            android:text="@string/forgot_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/activity_login_link_forgot"
             android:clickable="true"
             android:textAlignment="center"
             android:linksClickable="true"
-            android:onClick="registry" />
+            android:onClick="onClickForgotPass" />
     </LinearLayout>
 
     <LinearLayout
@@ -103,7 +107,7 @@ android:fitsSystemWindows="true">
         android:minHeight="50dp">
 
         <TextView
-            android:text="Unirme"
+            android:text="@string/registry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/activity_login_link_registry"

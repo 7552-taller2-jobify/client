@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
 import ar.fi.uba.jobify.domains.ProfileOthersRecommendations;
-import ar.fi.uba.jobify.domains.ProfileOwnRecommendations;
 import ar.fi.uba.jobify.exceptions.BusinessException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -58,13 +57,13 @@ public class GetOthersRecommendationsTask extends AbstractTask<String,Void,Profi
     protected void onPostExecute(ProfileOthersRecommendations profileOthersRecomendations) {
         super.onPostExecute(profileOthersRecomendations);
         if(profileOthersRecomendations != null){
-            ((PerfilRead) weakReference.get()).onProfileOthersRecomendationsSuccess(profileOthersRecomendations);
+            ((ProfileRead) weakReference.get()).onProfileOthersRecomendationsSuccess(profileOthersRecomendations);
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede obtener perfil others_recommendations");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileOthersRecomendationsSuccess(ProfileOthersRecommendations profileOthersRecomendations);
     }
 

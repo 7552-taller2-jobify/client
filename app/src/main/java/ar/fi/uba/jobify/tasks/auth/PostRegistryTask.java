@@ -48,8 +48,7 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,Registry
                 "\"address\": {" +
                 "\"lat\": \"" + lat + "\"," +
                 "\"lon\": \"" + lon + "\"" +
-                "}," +
-                "\"city\": \"" + "BORRAME" + "\"}"; // TODO smpiano borrame!
+                "}}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         Register register = null;

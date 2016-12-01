@@ -2,7 +2,6 @@ package ar.fi.uba.jobify.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,29 +14,29 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ar.fi.uba.jobify.domains.Contact;
-import ar.fi.uba.jobify.domains.Professional;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
-import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
+import ar.fi.uba.jobify.domains.ProfileContactsResult;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.tasks.contact.GetMineContactListTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.CircleTransform;
+import ar.fi.uba.jobify.utils.LocationHelper;
+import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
+import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
-import static ar.fi.uba.jobify.utils.FieldValidator.showCoolDistance;
 
 public class ContactListAdapter extends ArrayAdapter<ProfessionalSearchItem> implements GetMineContactListTask.ClientsListAggregator {
 
-    private boolean firstRefresed;
-    private Location loc;
+    private LocationHelper locHelper;
     private long total;
     private long offset;
     private boolean fetching;
     private Activity activity;
-    private MyPreferences pref = new MyPreferences(getContext());
+    private final MyPreferences pref;
+    private final MyPreferenceHelper helper;
 
     public ContactListAdapter(Activity activity, Context context, int resource,
                               List<ProfessionalSearchItem> contacts) {
@@ -46,7 +45,9 @@ public class ContactListAdapter extends ArrayAdapter<ProfessionalSearchItem> imp
         total=1;
         offset=0;
         fetching=false;
-        firstRefresed = false;
+        LocationHelper.updatePosition(this.getContext());
+        pref = new MyPreferences(getContext());
+        helper = new MyPreferenceHelper(getContext());
     }
 
     public Activity getActivity() {
@@ -69,28 +70,28 @@ public class ContactListAdapter extends ArrayAdapter<ProfessionalSearchItem> imp
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            GetMineContactListTask listClients = new GetMineContactListTask(ContactListAdapter.this);
-            if (loc != null) {
-                listClients.execute(String.valueOf(offset), String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()));
-            } else {
-                String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
-                String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
-                if (lat.isEmpty() && lon.isEmpty()) listClients.execute(String.valueOf(offset));
-                else listClients.execute(String.valueOf(offset), lat, lon);
-            }
+            GetMineContactListTask contactList = new GetMineContactListTask(ContactListAdapter.this);
+            String lat = pref.get(getContext().getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+            String lon = pref.get(getContext().getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+            contactList.execute(helper.getProfessional().getEmail(), String.valueOf(offset), lat, lon);
         }
     }
 
     @Override
-    public void addClients(ProfessionalSearchResult professionalSearchResult) {
-        if(professionalSearchResult !=null) {
+    public void addClients(ProfileContactsResult profileContactsResult) {
+        if(profileContactsResult != null) {
             //this.clear();
-            this.addAll(professionalSearchResult.getProfessionals());
+            this.addAll(profileContactsResult.getProfessionals());
             this.offset = this.getCount();
-            this.total = professionalSearchResult.getTotal();
+            this.total = profileContactsResult.getProfessionals().size();
             fetching = false;
+
+            if (total == 0) {
+                Context ctx = getActivity().getApplicationContext();
+                ShowMessage.toastMessage(ctx, ctx.getString(R.string.zero_contacts));
+            }
         }else{
-            Log.w(this.getClass().getCanonicalName(), "Something when wrong getting clients.");
+            Log.w(this.getClass().getCanonicalName(), "Algo salio mal agregando contactos.");
         }
     }
 

@@ -14,15 +14,17 @@ import java.util.ArrayList;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
 import ar.fi.uba.jobify.adapters.ContactListAdapter;
+import ar.fi.uba.jobify.adapters.ExpertiseListAdapter;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
+import ar.fi.uba.jobify.domains.ProfileExpertise;
 import fi.uba.ar.jobify.R;
 
 /**
  * Created by smpiano on 9/28/16.
  */
-public class ContactListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ExpertiseListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    public ContactListFragment() {
+    public ExpertiseListFragment() {
         super();
     }
 
@@ -31,35 +33,31 @@ public class ContactListFragment extends Fragment implements AdapterView.OnItemC
                              Bundle savedInstanceState) {
 
         //inflo la vista de listado de elementos
-        View fragmentView = inflater.inflate(R.layout.fragment_contact_list, container, false);
-        ListView contactsList = (ListView) fragmentView.findViewById(R.id.contactListView);
+        View fragmentView = inflater.inflate(R.layout.fragment_expertise_list, container, false);
+        ListView contactsList = (ListView) fragmentView.findViewById(R.id.expertiseListView);
 
         //Defino el adapter
-        ContactListAdapter contactsAdapter = new ContactListAdapter(
+        ExpertiseListAdapter expertiseListAdapter = new ExpertiseListAdapter(
                 getActivity(),
                 getContext(),
-                R.layout.list_professional_item,
-                new ArrayList<ProfessionalSearchItem>());
+                R.layout.list_expertise_item,
+                new ArrayList<ProfileExpertise>());
         //Asocio la listView con el adapter
-        contactsList.setAdapter(contactsAdapter);
+        contactsList.setAdapter(expertiseListAdapter);
         contactsList.setOnItemClickListener(this);
 
         // Si tarda mucho debería mostrar una barra de progreso
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
         contactsList.setEmptyView(bar);
-        contactsAdapter.refresh();
+        expertiseListAdapter.refresh();
         return fragmentView;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //Cuando selecciono un item
-        ProfessionalSearchItem professionalSearchItem = (ProfessionalSearchItem)parent.getItemAtPosition(position);
+        ProfileExpertise profileExpertise = (ProfileExpertise)parent.getItemAtPosition(position);
 
-        //Lo envío al perfil
-        Intent intent = new Intent(getContext(), ProfileActivity.class);
-        intent.putExtra(Intent.EXTRA_UID, professionalSearchItem.getEmail());
-        startActivity(intent);
     }
 }

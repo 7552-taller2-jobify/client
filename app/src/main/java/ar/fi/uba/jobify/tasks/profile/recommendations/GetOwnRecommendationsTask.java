@@ -57,13 +57,13 @@ public class GetOwnRecommendationsTask extends AbstractTask<String,Void,ProfileO
     protected void onPostExecute(ProfileOwnRecommendations profileOwnRecomendations) {
         super.onPostExecute(profileOwnRecomendations);
         if(profileOwnRecomendations != null){
-            ((PerfilRead) weakReference.get()).onProfileOwnRecomendationsSuccess(profileOwnRecomendations);
+            ((ProfileRead) weakReference.get()).onProfileOwnRecomendationsSuccess(profileOwnRecomendations);
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede obtener perfil own_recommendations");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileOwnRecomendationsSuccess(ProfileOwnRecommendations profileOwnRecomendations);
     }
 

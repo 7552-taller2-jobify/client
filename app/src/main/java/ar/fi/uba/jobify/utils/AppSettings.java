@@ -5,6 +5,7 @@ package ar.fi.uba.jobify.utils;
  */
 public class AppSettings {
 
+    private static final String IP_DEFAULT = "192.168.22.10";
     private static String SERVER_HOST = null;
     private static String HOST = null;
 
@@ -14,6 +15,7 @@ public class AppSettings {
 
 
     public static String getServerHost(){
+        if (SERVER_HOST == null) setServerHost(IP_DEFAULT);
         return SERVER_HOST;
     }
 
@@ -33,7 +35,7 @@ public class AppSettings {
     }
 
     public static String getHost() {
-        if (SERVER_HOST == null) setServerHost("192.168.22.10");
+        if (SERVER_HOST == null) setServerHost(IP_DEFAULT);
         return HOST;
     }
 }

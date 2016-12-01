@@ -56,13 +56,13 @@ public class PostSummaryTask extends AbstractTask<String,Void,String,ProfileActi
     protected void onPostExecute(String summary) {
         super.onPostExecute(summary);
         if(summary != null){
-            ((PerfilRead) weakReference.get()).onProfileSummaryCreationSuccess();
+            ((ProfileRead) weakReference.get()).onProfileSummaryCreationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede crear perfil summary");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileSummaryCreationSuccess();
     }
 

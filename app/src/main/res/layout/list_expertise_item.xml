@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:orientation="horizontal">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingLeft="6dp">
+
+            <TextView
+                android:id="@+id/expertise_row_company"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/expertise_row_company"
+                android:textStyle="bold|italic"
+                android:layout_width="wrap_content" />
+
+            <TextView
+                android:id="@+id/expertise_row_position"
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/expertise_row_position"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/expertise_row_category"
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/expertise_row_category" />
+
+            <ScrollView
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:id="@+id/expertise_row_expertise"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/expertise_row_expertise"
+                    android:minHeight="62dp"
+                    android:textStyle="italic" />
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/expertise_row_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/expertise_row_from"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:textAlignment="viewEnd" />
+
+            <TextView
+                android:id="@+id/expertise_row_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/expertise_row_to"
+                android:textSize="12sp"
+                android:textStyle="normal|bold"
+                android:gravity="end"
+                android:textAlignment="viewEnd" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

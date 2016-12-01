@@ -15,12 +15,12 @@ import fi.uba.ar.jobify.R;
 /**
  * Created by smpiano on 9/28/16.
  */
-public class PutExpertisePositionTask extends AbstractTask<String,Void,String,ProfileActivity> {
+public class PutExpertiseTask extends AbstractTask<String,Void,String,ProfileActivity> {
 
     private final MyPreferenceHelper helper;
     private final MyPreferences pref;
 
-    public PutExpertisePositionTask(ProfileActivity activity) {
+    public PutExpertiseTask(ProfileActivity activity) {
         super(activity);
         helper = new MyPreferenceHelper(activity.getApplicationContext());
         pref = new MyPreferences(activity.getApplicationContext());
@@ -48,7 +48,7 @@ public class PutExpertisePositionTask extends AbstractTask<String,Void,String,Pr
             "\"category\": \"" + category +
         "\"}";
 
-        String uri = "/users/"+helper.getProfessional().getEmail()+"/profile/expertise/position/"+positionOlder+"?token="+token;
+        String uri = "/users/"+helper.getProfessional().getEmail()+"/profile/expertise?token="+token;
 
         try {
             restClient.put(uri, body, withAuth(ctx));
@@ -73,14 +73,14 @@ public class PutExpertisePositionTask extends AbstractTask<String,Void,String,Pr
     protected void onPostExecute(String expertiseList) {
         super.onPostExecute(expertiseList);
         if(expertiseList != null){
-            ((PerfilRead) weakReference.get()).onProfileExpertisePositionModificationSuccess();
+            ((ProfileRead) weakReference.get()).onProfileExpertiseModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modifcar perfil expertise position");
         }
     }
 
-    public interface PerfilRead {
-        public void onProfileExpertisePositionModificationSuccess();
+    public interface ProfileRead {
+        public void onProfileExpertiseModificationSuccess();
     }
 
 }

@@ -18,7 +18,8 @@ public class ProfilePersonal {
     private String email;
     private Date birthday;
     private String gender;
-    private String city;
+    private String lat;
+    private String lon;
 
     public ProfilePersonal() {
     }
@@ -75,12 +76,20 @@ public class ProfilePersonal {
         this.gender = gender;
     }
 
-    public String getCity() {
-        return city;
+    public String getLat() {
+        return lat;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
     }
 
     public static ProfilePersonal fromJson(JSONObject json) {
@@ -95,8 +104,10 @@ public class ProfilePersonal {
                 professional.setBirthday(DateUtils.parseShortDateArg2(json.getString("birthday")));
             }
             professional.setGender(json.getString("gender"));
-            if (json.has("city")) {
-                professional.setCity(json.getString("city"));
+            if (json.has("address")) {
+                JSONObject add = json.getJSONObject("address");
+                professional.setLat(add.getString("lat"));
+                professional.setLon(add.getString("lon"));
             }
 
         } catch (JSONException e) {

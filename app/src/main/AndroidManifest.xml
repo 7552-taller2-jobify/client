@@ -32,7 +32,7 @@
         </activity>
         <activity
             android:name="ar.fi.uba.jobify.activities.MyContactsActivity"
-            android:label="@string/contacts"
+            android:label="@string/menu_contacts"
             android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name="ar.fi.uba.jobify.activities.ProfileActivity"
-            android:label="@string/contacts"
+            android:label="@string/menu_profile"
             android:parentActivityName="ar.fi.uba.jobify.activities.MyContactsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

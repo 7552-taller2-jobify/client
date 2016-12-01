@@ -3,15 +3,10 @@ package ar.fi.uba.jobify.tasks.contact;
 import android.content.Context;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.List;
 
 import ar.fi.uba.jobify.activities.MyContactsActivity;
-import ar.fi.uba.jobify.adapters.ContactListAdapter;
-import ar.fi.uba.jobify.domains.Contact;
-import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.DateUtils;
@@ -24,7 +19,6 @@ import fi.uba.ar.jobify.R;
 public class PostContactRequestTask extends AbstractTask<String,Void,String,MyContactsActivity> {
 
     private final MyPreferences pref;
-    private List<Contact> contacts;
     private MyPreferenceHelper helper;
 
     public PostContactRequestTask(MyContactsActivity activity) {

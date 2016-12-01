@@ -73,13 +73,13 @@ public class PostPersonalTask extends AbstractTask<String,Void,String,ProfileAct
     protected void onPostExecute(String personal) {
         super.onPostExecute(personal);
         if(personal != null){
-            ((PerfilRead) weakReference.get()).onProfilePersonalCreationSuccess();
+            ((ProfileRead) weakReference.get()).onProfilePersonalCreationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede crear perfil personal");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfilePersonalCreationSuccess();
     }
 
