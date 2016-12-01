@@ -25,14 +25,12 @@ public class DeleteLogoutTask extends AbstractTask<String,Void,String,MainActivi
             result = "Ok";
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
-        } catch (final ServerErrorException e) {
+        } catch (final Exception e) {
             weakReference.get().runOnUiThread(new Runnable() {
                 public void run() {
                     ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
                 }
             });
-        } catch (Exception e) {
-            ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
         }
         return result;
     }

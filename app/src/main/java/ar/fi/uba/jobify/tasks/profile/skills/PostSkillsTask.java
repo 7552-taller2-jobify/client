@@ -3,10 +3,8 @@ package ar.fi.uba.jobify.tasks.profile.skills;
 import android.content.Context;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.domains.ProfileSkillList;
 import ar.fi.uba.jobify.exceptions.BusinessException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -62,13 +60,13 @@ public class PostSkillsTask extends AbstractTask<String,Void,String,ProfileActiv
     protected void onPostExecute(String skillList) {
         super.onPostExecute(skillList);
         if(skillList != null){
-            ((PerfilRead) weakReference.get()).onProfileSkillCreationSuccess();
+            ((ProfileRead) weakReference.get()).onProfileSkillCreationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede crear perfil skills");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileSkillCreationSuccess();
     }
 

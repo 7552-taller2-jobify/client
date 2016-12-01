@@ -3,10 +3,8 @@ package ar.fi.uba.jobify.tasks.profile.expertise;
 import android.content.Context;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.domains.ProfileExpertiseList;
 import ar.fi.uba.jobify.exceptions.BusinessException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -17,12 +15,12 @@ import fi.uba.ar.jobify.R;
 /**
  * Created by smpiano on 9/28/16.
  */
-public class PostExpertisePositionTask extends AbstractTask<String,Void,String,ProfileActivity> {
+public class PostExpertiseTask extends AbstractTask<String,Void,String,ProfileActivity> {
 
     private final MyPreferenceHelper helper;
     private final MyPreferences pref;
 
-    public PostExpertisePositionTask(ProfileActivity activity) {
+    public PostExpertiseTask(ProfileActivity activity) {
         super(activity);
         helper = new MyPreferenceHelper(activity.getApplicationContext());
         pref = new MyPreferences(activity.getApplicationContext());
@@ -50,7 +48,7 @@ public class PostExpertisePositionTask extends AbstractTask<String,Void,String,P
         "\"}";
 
         try {
-            restClient.post("/users/"+helper.getProfessional().getEmail()+"/profile/expertise/position?token="+token, body, withAuth(ctx));
+            restClient.post("/users/"+helper.getProfessional().getEmail()+"/profile/expertise?token="+token, body, withAuth(ctx));
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         } catch (final Exception e) {
@@ -72,14 +70,14 @@ public class PostExpertisePositionTask extends AbstractTask<String,Void,String,P
     protected void onPostExecute(String expertiseList) {
         super.onPostExecute(expertiseList);
         if(expertiseList != null){
-            ((PerfilRead) weakReference.get()).onProfileExpertisePositionCreationSuccess();
+            ((ProfileRead) weakReference.get()).onProfileExpertiseCreationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede crear perfil expertise position");
         }
     }
 
-    public interface PerfilRead {
-        public void onProfileExpertisePositionCreationSuccess();
+    public interface ProfileRead {
+        public void onProfileExpertiseCreationSuccess();
     }
 
 }

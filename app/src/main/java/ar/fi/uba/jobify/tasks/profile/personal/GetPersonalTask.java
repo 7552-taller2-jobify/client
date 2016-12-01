@@ -57,13 +57,13 @@ public class GetPersonalTask extends AbstractTask<String,Void,ProfilePersonal,Pr
     protected void onPostExecute(ProfilePersonal personal) {
         super.onPostExecute(personal);
         if(personal != null){
-            ((PerfilRead) weakReference.get()).onProfilePersonalSuccess(personal);
+            ((ProfileRead) weakReference.get()).onProfilePersonalSuccess(personal);
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede obtener perfil personal");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfilePersonalSuccess(ProfilePersonal personal);
     }
 

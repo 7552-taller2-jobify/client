@@ -1,94 +1,79 @@
 <resources>
     <string name="app_name">Jobify</string>
-    <string name="action_settings">Opciones</string>
-    <string name="action_filter">Filtrar</string>
-    <string name="action_qrscan">QR Scan</string>
 
     <!-- items del menu lateral -->
-    <string name="menu_clients">Conctactos</string>
-    <string name="menu_products">Productos</string>
-    <string name="menu_orders">Pedidos</string>
-    <string name="menu_agenda_del_dia">Agenda del día</string>
-    <string name="menu_agenda_semanal">Agenda semanal</string>
-    <string name="menu_scanear_codigo">Scanear Código</string>
+    <string name="menu_contacts">Conctactos</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_chat">Chat</string>
+    <string name="menu_red">Red Profesionales</string>
+    <string name="menu_search">Buscar</string>
+    <string name="menu_login">Ingresa</string>
+    <string name="menu_logout">Salir</string>
 
-    <string name="contacts">Clientes</string>
-    <string name="products">Productos</string>
-    <string name="orders">Pedidos</string>
-    <string name="order">Pedido</string>
-    <string name="calendar">Calendario</string>
-    <string name="agenda">Agenda</string>
-    <string name="brands">Marcas</string>
-
-    <string name="client_id">Código</string>
-    <string name="client_lastname">Apellido</string>
-    <string name="client_name">Nombre</string>
-    <string name="client_cuil">CUIL</string>
-    <string name="client_address">Dirección</string>
-    <string name="client_phone">Teléfono</string>
-    <string name="client_email">Email</string>
-
-    <string name="apply">Aplicar</string>
+    <!-- actions -->
+    <string name="action_filter">Filtrar</string>
     <string name="action_empty">Vaciar</string>
     <string name="action_cancel">Cancelar</string>
-    <string name="confirm_order">Confirmar Pedido</string>
 
-    <string name="email_del_cliente">Email del cliente</string>
-    <string name="tel_fono_del_cliente">Teléfono del cliente</string>
-    <string name="direcci_n_del_cliente">Dirección del cliente</string>
-    <string name="codigo_del_cliente">Código del cliente</string>
-    <string name="nombre_del_cliente">Nombre del Cliente</string>
-    <string name="razon_social_del_cliente">Razón Social del Cliente</string>
-    <string name="cuil_del_cliente">CUIL del Cliente</string>
-
-    <string name="codigo_del_producto">Codigo del producto</string>
-    <string name="nombre_del_producto">Nombre del producto</string>
-    <string name="marca_del_producto">Marca del producto</string>
-    <string name="stock_del_producto">Stock del producto</string>
-    <string name="precio_del_producto">Precio del producto</string>
-    <string name="descripcion_del_producto">Descripción del producto extra largaass y tiene muchas lineas que ocupan espacio</string>
-    <string name="nombre_del_descuento">Nombre del descuento</string>
-    <string name="descuento_del_producto_porcentaje">Descuento del producto</string>
-    <string name="descuento_del_producto_fecha">Fecha vigencia del descuento</string>
-
-    <string name="codigo_del_pedido">Código del pedido</string>
-    <string name="estado_del_pedido">Estado del pedido</string>
+    <!-- profile screen -->
+    <string name="profile_cuil">CUIL</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_phone">Teléfono</string>
+    <string name="profile_address">Dirección</string>
+    <string name="profile_code">Codigo</string>
+    <string name="profile_name">Nombre</string>
+    <string name="profile_birthday">Nacimiento</string>
+    <string name="profile_gender">Sexo</string>
 
     <string name="pedido_activo">No hay pedido en curso</string>
 
-    <string name="estados_confirmadas">Confirmadas</string>
-    <string name="estados_borradores">Borradores</string>
-
+    <!-- navigation -->
     <string name="navigation_drawer_open">Drawer abierto</string>
     <string name="navigation_drawer_close">Drawer cerrado</string>
 
-    <string name="menu_login">Ingresa</string>
-    <string name="menu_logout">Salir</string>
-    <string name="nav_header_main_vendor_name_default">Apellido, Nombre</string>
-    <string name="nav_header_main_vendor_email_default">Email</string>
+    <string name="nav_header_main_professional_name_default">Apellido, Nombre</string>
+    <string name="nav_header_main_professional_email_default">Email</string>
     <string name="fragment_main_vendor_name_default">Apellido, Nombre</string>
 
+    <!-- shared preferences -->
     <string name="shared_pref_file_key">ordertracker_preferences</string>
     <string name="shared_pref_current_location_lat">lat</string>
     <string name="shared_pref_current_location_lon">lon</string>
     <string name="shared_pref_current_token">token</string>
     <string name="shared_pref_current_professional">professional</string>
 
-    <string name="lunes_shorttag">Lun</string>
-    <string name="martes_shorttag">Mar</string>
-    <string name="miercoles_shorttag">Mie</string>
-    <string name="jueves_shorttag">Jue</string>
-    <string name="viernes_shorttag">Vie</string>
-    <string name="fueraruta_shorttag">FR</string>
+    <string name="fragment_main_report">Buscar</string>
 
-    <string name="new_promotion">Promociones</string>
-    <string name="new_client">Nuevo Cliente</string>
-    <string name="client_updated">Cliente Actualizado</string>
-    <string name="product_stocked">Producto con Stock</string>
-    <string name="fragment_main_report">Buascar positions</string>
-    <string name="daily_route">Ruta Diaria</string>
+    <!-- leyends -->
     <string name="login_leyend">Consigue tu mejor trabajo!</string>
+    <string name="forgot_pass">Olvidé la contraseña!?</string>
+    <string name="goodby_message">Vuelve pronto!</string>
+    <string name="registry">Unirme</string>
+    <string name="login_button">Login</string>
+    <string name="zero_contacts">Conéctate! Aún no tienes contactos!</string>
+    <string name="redirection_mail">Yendo al email...</string>
+    <string name="femenino">Mujer</string>
+    <string name="masculino">Hombre</string>
+    <string name="profile_summary">Resumen</string>
+    <string name="summary_is_empty">Tu resumen está vacio!</string>
 
+    <!-- expertise -->
+    <string name="expertise_row_company">Empresa</string>
+    <string name="expertise_row_position">Posición</string>
+    <string name="expertise_row_from">|-&gt;123</string>
+    <string name="expertise_row_to"> &lt;-|123</string>
+    <string name="cannot_display_map">No podemos mostrar información de la localización.</string>
+    <string name="cannot_inverse_address_calc">No puede obtener la direccion inversa a lat y lon :(</string>
+    <string name="zero_expertises">No tienes experiecia cargada!</string>
+    <string name="expertise_row_expertise">Experiencia</string>
+    <string name="expertise_row_category">Categoria</string>
+
+    <!-- skills -->
+    <string name="skill_row_category">Categoria</string>
+    <string name="skill_row_skills">Skills</string>
+    <string name="zero_skills">No Tiene Skills</string>
+    <string name="profile_detail_gender_m">Masculino</string>
+    <string name="profile_detail_gender_f">Femenino</string>
 
 
 </resources>

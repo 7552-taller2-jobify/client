@@ -57,13 +57,13 @@ public class GetPictureTask extends AbstractTask<String,Void,ProfilePicture,Prof
     protected void onPostExecute(ProfilePicture picture) {
         super.onPostExecute(picture);
         if(picture != null){
-            ((PerfilRead) weakReference.get()).onProfilePictureSuccess(picture);
+            ((ProfileRead) weakReference.get()).onProfilePictureSuccess(picture);
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede obtener perfil picture");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfilePictureSuccess(ProfilePicture picture);
     }
 

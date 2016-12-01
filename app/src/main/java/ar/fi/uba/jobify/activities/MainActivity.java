@@ -29,7 +29,6 @@ import fi.uba.ar.jobify.R;
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
 public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.Logout{
-    private static final String TAG = "MainActivity";
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -130,18 +129,34 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
         startActivity(intent);
     }
 
+    public void openProfileActivity(View view) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    public void openChatActivity(View view) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
+    }
+
+    public void openSearchActivity(View view) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     public void openLoginActivity(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
     public void openLogoutActivity(View view) {
-        ShowMessage.toastMessage(getApplicationContext(), "Los Héroes no abandonan!");
+        ShowMessage.toastMessage(getApplicationContext(), getString(R.string.goodby_message));
         if (RestClient.isOnline(this)) {
             String email = (new MyPreferenceHelper(this)).getProfessional().getEmail();
             String token = (new MyPreferences(this)).get(getString(R.string.shared_pref_current_token),"");
             new DeleteLogoutTask(this).execute(email, token);
         }
+        onLogoutSuccess();
     }
 
     private void setupNavigationDrawerContent(NavigationView navigationView) {
@@ -151,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                         switch (menuItem.getItemId()) {
-                            case R.id.nav_clients:
+                            case R.id.nav_contacts:
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyClientsActivity(null);
@@ -160,6 +175,21 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openLoginActivity(null);
+                                return true;
+                            case R.id.nav_profile:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openProfileActivity(null);
+                                return true;
+                            case R.id.nav_chat:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openChatActivity(null);
+                                return true;
+                            case R.id.nav_search:
+                                menuItem.setChecked(true);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                openSearchActivity(null);
                                 return true;
                             case R.id.nav_logout:
                                 menuItem.setChecked(true);

@@ -8,76 +8,184 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.method.KeyListener;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import ar.fi.uba.jobify.domains.Contact;
-import ar.fi.uba.jobify.domains.ProfileExpertiseList;
+import ar.fi.uba.jobify.adapters.ExpertiseListAdapter;
+import ar.fi.uba.jobify.adapters.SkillListAdapter;
+import ar.fi.uba.jobify.domains.Professional;
 import ar.fi.uba.jobify.domains.ProfilePersonal;
+import ar.fi.uba.jobify.domains.ProfilePicture;
 import ar.fi.uba.jobify.domains.ProfileSummary;
+import ar.fi.uba.jobify.fragments.DatePickerFragment;
+import ar.fi.uba.jobify.fragments.ExpertiseListFragment;
+import ar.fi.uba.jobify.fragments.SkillListFragment;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.profile.expertise.GetExpertiseTask;
+import ar.fi.uba.jobify.service.InverseGeocodeService;
 import ar.fi.uba.jobify.tasks.profile.personal.GetPersonalTask;
+import ar.fi.uba.jobify.tasks.profile.picture.GetPictureTask;
 import ar.fi.uba.jobify.tasks.profile.summary.GetSummaryTask;
+import ar.fi.uba.jobify.utils.DateUtils;
+import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 import static ar.fi.uba.jobify.utils.FieldValidator.isValidMail;
-import static ar.fi.uba.jobify.utils.FieldValidator.isValidPhone;
 
 public class ProfileActivity extends AppCompatActivity
-        implements GetPersonalTask.PerfilRead,
-        GetSummaryTask.PerfilRead,
-        GetExpertiseTask.PerfilRead,
-        View.OnClickListener {
+        implements GetPersonalTask.ProfileRead,
+        GetSummaryTask.ProfileRead,
+        GetPictureTask.ProfileRead,
+        ExpertiseListAdapter.ExpertisesRead,
+        SkillListAdapter.SkillRead,
+        View.OnClickListener,
+        InverseGeocodeService.InverseGeocodeServiceResult {
 
-    private long contactId;
-    private MyPreferences pref = new MyPreferences(this);
+    private MyPreferences pref;
+    private MyPreferenceHelper helper;
+    private String professionalId;
 
-    public ProfileActivity(){
-        super();
-        contactId =0;
-    }
+    private ImageView personalPhoto;
+    private EditText personalEmail;
+    private ImageView personalEmailIcon;
+    private EditText personalName;
+    private EditText personalBirthday;
+    private Button personalBirthdayButton;
+    private TextView personalGender;
+    private TextView personalAddress;
+    private ImageView personalMap;
+    private EditText personalSummary;
+    private TextView personalSummaryLabel;
+
+    //expertises
+    private CardView expertisesView;
+    private TextView profileExpertisesLabel;
+
+    //skills
+    private CardView skillsView;
+    private TextView profileSkillsLabel;
+
+
+
+    private FloatingActionButton fab;
+    private CollapsingToolbarLayout toolbarName;
+    private DatePickerFragment birthdayFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_perfil);
+        setContentView(R.layout.activity_profile);
+
+        pref = new MyPreferences(this);
+        helper = new MyPreferenceHelper(this);
+        professionalId = helper.getProfessional().getEmail();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent= getIntent();
-        contactId = intent.getLongExtra(Intent.EXTRA_UID, 0);
-        if (RestClient.isOnline(this)) new GetPersonalTask(this).execute(Long.toString(contactId));
+        Intent intent = getIntent();
+        String intentExtraUid = intent.getStringExtra(Intent.EXTRA_UID);
+        if (intentExtraUid != null) professionalId = intentExtraUid;
 
-        findViewById(R.id.contact_detail_phone).setOnClickListener(this);
-        findViewById(R.id.contact_detail_phone_number_icon).setOnClickListener(this);
-        findViewById(R.id.contact_detail_email).setOnClickListener(this);
-        findViewById(R.id.contact_detail_email_icon).setOnClickListener(this);
+        if (RestClient.isOnline(this)) {
+            new GetPersonalTask(this).execute(professionalId);
+            new GetSummaryTask(this).execute(professionalId);
+            new GetPictureTask(this).execute(professionalId);
+        }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        // inflating the expertise fragment
+        expertisesView = (CardView) findViewById(R.id.profile_view_expertises);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.profile_view_expertises, new ExpertiseListFragment()).commit();
+
+        //inflating the skills fragment
+        skillsView = (CardView) findViewById(R.id.profile_view_skills);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.profile_view_skills, new SkillListFragment()).commit();
+
+
+        // TODO edition time.
+        personalPhoto = (ImageView) findViewById(R.id.profile_detail_image);
+        personalEmail = (EditText) findViewById(R.id.profile_detail_email);
+        personalEmailIcon = (ImageView) findViewById(R.id.profile_detail_email_icon);
+        personalName = (EditText) findViewById(R.id.profile_detail_name);
+        personalBirthday = (EditText) findViewById(R.id.profile_detail_birthday);
+        personalBirthdayButton = (Button) findViewById(R.id.profile_edit_button_birthday);
+        personalGender = (TextView) findViewById(R.id.profile_detail_gender);
+        personalAddress = ((TextView) findViewById(R.id.profile_detail_address));
+        personalMap = (ImageView) findViewById(R.id.profile_detail_map);
+        personalSummary = (EditText) findViewById(R.id.profile_detail_summary);
+        personalSummaryLabel = (TextView) findViewById(R.id.profile_detail_summary_label);
+
+        //expertises
+        profileExpertisesLabel = (TextView) findViewById(R.id.profile_detail_expertises_label);
+
+        //skills
+        profileSkillsLabel = (TextView) findViewById(R.id.profile_detail_skills_label);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        toolbarName = (CollapsingToolbarLayout) findViewById(R.id.profile_detail_collapsing_toolbar);
+
+        personalEmail.setOnClickListener(this);
+        personalEmailIcon.setOnClickListener(this);
+        personalName.setOnClickListener(this);
+        personalBirthday.setOnClickListener(this);
+        personalGender.setOnClickListener(this);
+        personalAddress.setOnClickListener(this);
         fab.setOnClickListener(this);
 
-        this.startCleanUpUI();
+        this.startCleanUpUI(true);
     }
 
-    private void startCleanUpUI() {
-        ((CollapsingToolbarLayout) findViewById(R.id.contact_detail_collapsing_toolbar)).setTitle("");
+    private void startCleanUpUI(Boolean isReadMode) {
 
-        ((TextView) findViewById(R.id.contact_detail_id)).setText("");
-        ((TextView) findViewById(R.id.conctact_detail_name)).setText("");
-        ((TextView) findViewById(R.id.contact_detail_company)).setText("");
-        ((TextView) findViewById(R.id.contact_detail_cuil)).setText("");
-        ((TextView) findViewById(R.id.contact_detail_address)).setText("");
-        ((TextView) findViewById(R.id.contact_detail_phone)).setText("");
-        ((TextView) findViewById(R.id.contact_detail_email)).setText("");
+        profileExpertisesLabel.setVisibility(View.INVISIBLE);
+        profileSkillsLabel.setVisibility(View.INVISIBLE);
+
+        if (isReadMode) {
+            toolbarName.setTitle("");
+
+            personalEmail.setText("");
+            personalName.setText("");
+            personalBirthday.setText("");
+            personalGender.setText("");
+            personalAddress.setText("");
+
+            personalEmail.setTag(personalEmail.getKeyListener());
+            personalEmail.setKeyListener(null);
+            personalName.setTag(personalName.getKeyListener());
+            personalName.setKeyListener(null);
+            personalBirthday.setTag(personalBirthday.getKeyListener());
+            personalBirthday.setKeyListener(null);
+            personalSummary.setTag(personalSummary.getKeyListener());
+            personalSummary.setKeyListener(null);
+            personalAddress.setTag(personalAddress.getKeyListener());
+            personalAddress.setKeyListener(null);
+
+            personalBirthdayButton.setVisibility(View.INVISIBLE);
+            personalSummaryLabel.setVisibility(View.INVISIBLE);
+        } else {
+            personalEmail.setKeyListener((KeyListener) personalEmail.getTag());
+            personalName.setKeyListener((KeyListener) personalName.getTag());
+            personalBirthday.setKeyListener((KeyListener) personalBirthday.getTag());
+            personalBirthdayButton.setVisibility(View.VISIBLE);
+            personalSummaryLabel.setVisibility(View.VISIBLE);
+            personalSummary.setKeyListener((KeyListener) personalSummary.getTag());
+            personalAddress.setKeyListener((KeyListener) personalAddress.getTag());
+        }
     }
 
     public void showSnackbarSimpleMessage(String msg){
@@ -87,7 +195,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         if (view.getId()==R.id.fab) {
-            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.contact_detail_coordinatorLayout);
+            CoordinatorLayout cl = (CoordinatorLayout) findViewById(R.id.profile_detail_coordinatorLayout);
             ShowMessage.showSnackbarSimpleMessage(cl, "No se hace nada");
             //if (this.draftOrders == null) {
             //    ShowMessage.showSnackbarSimpleMessage(cl, "No se pudo obtener info del pedido");
@@ -97,70 +205,110 @@ public class ProfileActivity extends AppCompatActivity
             //} else {
             //    // si no hay orden, crear una nueva
             //Cuidado que cambio todo
-            //    if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_seller), 1L).toString(), Long.toString(contactId));
+            //    if (RestClient.isOnline(this)) new PostOrdersTask(this).execute(pref.get(getString(R.string.shared_pref_current_seller), 1L).toString(), Long.toString(professionalId));
             //}
-        } else if((view.getId() == R.id.contact_detail_phone || view.getId() == R.id.contact_detail_phone_number_icon)
-                && isValidPhone(((TextView) findViewById(R.id.contact_detail_phone)).getText())){
-            String uri = "tel:" + ((TextView) findViewById(R.id.contact_detail_phone)).getText().toString().trim();
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse(uri));
-            startActivity(intent);
         }
-        if((view.getId() == R.id.contact_detail_email || view.getId() == R.id.contact_detail_email_icon)
-                && isValidMail(((TextView) findViewById(R.id.contact_detail_email)).getText())){
+        if((view.getId() == R.id.profile_detail_email || view.getId() == R.id.profile_detail_email_icon)
+                && isValidMail(personalEmail.getText())){
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto",((TextView) findViewById(R.id.contact_detail_email)).getText().toString().trim(), null));
-            intent.putExtra(Intent.EXTRA_SUBJECT, "[OrderTracker] - Mensaje del vendedor");
-            startActivity(Intent.createChooser(intent, "Send email..."));
+                    "mailto",personalEmail.getText().toString().trim(), null));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "[Jobify] - Mensaje de "+helper.getProfessional().getFullName());
+            startActivity(Intent.createChooser(intent, getString(R.string.redirection_mail)));
         }
     }
 
-    public void updateContactInformation(Contact contact){
-        ((CollapsingToolbarLayout) findViewById(R.id.contact_detail_collapsing_toolbar)).setTitle(contact.getFullName());
-        if (isContentValid(contact.getAvatar()).isEmpty()) {
-            Picasso.with(this).load(R.drawable.logo).into(((ImageView) findViewById(R.id.contact_detail_image)));
+    public void updatePhoto(Professional professional){
+
+    }
+
+    public void updateMap(ProfilePersonal personal) {
+        // validacion
+        if (personal.getLat().isEmpty() || personal.getLon().isEmpty()) {
+            ShowMessage.toastMessage(this,getString(R.string.cannot_display_map));
+            return;
+        }
+
+        //llamo al servicio externo
+        InverseGeocodeService addressService = new InverseGeocodeService(this,personal.getLat(),personal.getLon());
+
+        // Pongo el punto en el mapa estatico
+        String mapURL="https://maps.googleapis.com/maps/api/staticmap?" +
+                "zoom=15" +
+                "&size=400x300" +
+                "&maptype=roadmap" +
+                "&key=AIzaSyAyta4hXfctjxRTFWd2zKKeDCpVe3Qa-1E" +
+                "&center="+ personal.getLat()+','+ personal.getLon()+
+                "&markers=color:blue%7C"+ personal.getLat()+','+ personal.getLon();
+        Picasso.with(this).load(mapURL).into(personalMap);
+    }
+
+    @Override
+    public void onInverseCalculationSuccess(String address) {
+        if (address.isEmpty()) {
+            ShowMessage.toastMessage(this,getString(R.string.cannot_inverse_address_calc));
         } else {
-            Picasso.with(this).load(contact.getAvatar()).into(((ImageView) findViewById(R.id.contact_detail_image)));
+            personalAddress.setText(address);
         }
-
-        ((TextView) findViewById(R.id.contact_detail_id)).setText(isContentValid(Long.toString(contact.getId())));
-        ((TextView) findViewById(R.id.conctact_detail_name)).setText(isContentValid(contact.getFullName()));
-        ((TextView) findViewById(R.id.contact_detail_company)).setText(isContentValid(contact.getCompany()));
-        ((TextView) findViewById(R.id.contact_detail_cuil)).setText(isContentValid(contact.getCuil()));
-        ((TextView) findViewById(R.id.contact_detail_address)).setText(isContentValid(contact.getAddress()));
-
-        int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
-
-        TextView phoneField = ((TextView)findViewById(R.id.contact_detail_phone));
-        phoneField.setText(isContentValid(contact.getPhoneNumber()));
-        if (isValidPhone(phoneField.getText())) {
-            ((ImageView) findViewById(R.id.contact_detail_phone_number_icon)).setColorFilter(colorAccent);
-            phoneField.setTextColor(colorAccent);
-        }
-
-        TextView mailField = ((TextView)findViewById(R.id.contact_detail_email));
-        mailField.setText(isContentValid(contact.getEmail()));
-        if (isValidMail(mailField.getText())) {
-            ((ImageView)findViewById(R.id.contact_detail_email_icon)).setColorFilter(colorAccent);
-            mailField.setTextColor(colorAccent);
-        }
-
-        String mapURL="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=400x300&maptype=roadmap&key=AIzaSyB7KkfXSNVvngEQ0LwhvLSt7i1oB4p2RdQ&center="+ contact.getLat()+','+ contact.getLon()+"&markers=color:blue%7C"+ contact.getLat()+','+ contact.getLon();
-        Picasso.with(this).load(mapURL).into(((ImageView) findViewById(R.id.contact_detail_map)));
     }
 
     @Override
     public void onProfilePersonalSuccess(ProfilePersonal personal) {
-        // TODO smpiano.
+        Integer edad = DateUtils.getEdad(personal.getBirthday());
+        toolbarName.setTitle(isContentValid(personal.getFirstName())+" ("+edad+" años)");
+
+        personalEmail.setText(isContentValid(personal.getEmail()));
+        personalName.setText(isContentValid(personal.getFullName()));
+        personalBirthday.setText(isContentValid(DateUtils.formatShortDateArg2(personal.getBirthday())));
+        personalGender.setText(getString((isContentValid(personal.getGender()).equals("M"))? R.string.masculino : R.string.femenino));
+
+
+        //personalAddress.setText(isContentValid(professional.getAddress()));
+
+        //Coloreando el email para la action.
+        int colorAccent = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+        personalEmail.setText(isContentValid(personal.getEmail()));
+        if (isValidMail(personalEmail.getText())) {
+            personalEmailIcon.setColorFilter(colorAccent);
+            personalEmail.setTextColor(colorAccent);
+        }
+
+        //actualizo mapa
+        updateMap(personal);
+    }
+
+    public void showDatePickerDialog(View view) {
+        birthdayFragment = new DatePickerFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", R.id.profile_detail_birthday);
+        birthdayFragment.setArguments(args);
+        birthdayFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     @Override
     public void onProfileSummarySuccess(ProfileSummary summary) {
-        // TODO smpiano.
+        if (summary != null && !summary.getSummary().isEmpty()) {
+            personalSummary.setText(isContentValid(summary.getSummary()));
+        } else {
+            personalSummary.setText(getString(R.string.summary_is_empty));
+        }
     }
 
     @Override
-    public void onProfileExpertiseSuccess(ProfileExpertiseList expertiseList) {
-        // TODO smpiano.
+    public void onExpertisesEmpty() {
+        profileExpertisesLabel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSkillEmpty() {
+        profileSkillsLabel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onProfilePictureSuccess(ProfilePicture picture) {
+        if (isContentValid(picture.getPicture()).isEmpty()) {
+            Picasso.with(this).load(R.drawable.logo).into(personalPhoto);
+        } else {
+            Picasso.with(this).load(picture.getPicture()).into(personalPhoto);
+        }
     }
 }

@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import ar.fi.uba.jobify.activities.ProfileActivity;
 import ar.fi.uba.jobify.domains.ProfileContactList;
-import ar.fi.uba.jobify.domains.ProfileSkillList;
 import ar.fi.uba.jobify.exceptions.BusinessException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -20,12 +19,10 @@ import fi.uba.ar.jobify.R;
  */
 public class GetContactsTask extends AbstractTask<String,Void,ProfileContactList,ProfileActivity> {
 
-    private final MyPreferenceHelper helper;
     private final MyPreferences pref;
 
     public GetContactsTask(ProfileActivity activity) {
         super(activity);
-        helper = new MyPreferenceHelper(activity.getApplicationContext());
         pref = new MyPreferences(activity.getApplicationContext());
     }
 
@@ -58,13 +55,13 @@ public class GetContactsTask extends AbstractTask<String,Void,ProfileContactList
     protected void onPostExecute(ProfileContactList contactList) {
         super.onPostExecute(contactList);
         if(contactList != null){
-            ((PerfilRead) weakReference.get()).onProfileContactListSuccess(contactList);
+            ((ProfileRead) weakReference.get()).onProfileContactListSuccess(contactList);
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede obtener perfil contacts");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileContactListSuccess(ProfileContactList contactList);
     }
 

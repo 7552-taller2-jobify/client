@@ -21,7 +21,7 @@ public class ForgotPassword {
 
     public static ForgotPassword fromJson(JSONObject json) {
         try {
-            ForgotPassword forgotPassword = new ForgotPassword(json.getString("pass"));
+            ForgotPassword forgotPassword = new ForgotPassword(json.getString("password"));
             return forgotPassword;
         } catch (JSONException e) {
             throw new BusinessException("Error parsing ForgotPassword.", e);

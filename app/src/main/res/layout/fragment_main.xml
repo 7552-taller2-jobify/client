@@ -4,19 +4,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <!-- Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/off_road_button"
-        android:id="@+id/off_road_button"
-        android:onClick="openMyClientsActivity"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/products_button"
-        android:id="@+id/poducts_button"
-        android:onClick="openProductsActivity"/ -->
     <ImageView
         android:layout_width="140dp"
         android:layout_height="140dp"

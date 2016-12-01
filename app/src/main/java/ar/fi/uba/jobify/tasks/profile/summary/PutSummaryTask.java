@@ -56,13 +56,13 @@ public class PutSummaryTask extends AbstractTask<String,Void,String,ProfileActiv
     protected void onPostExecute(String summary) {
         super.onPostExecute(summary);
         if(summary != null){
-            ((PerfilRead) weakReference.get()).onProfileSummaryModificationSuccess();
+            ((ProfileRead) weakReference.get()).onProfileSummaryModificationSuccess();
         } else{
             weakReference.get().showSnackbarSimpleMessage("No se puede modificar perfil summary");
         }
     }
 
-    public interface PerfilRead {
+    public interface ProfileRead {
         public void onProfileSummaryModificationSuccess();
     }
 

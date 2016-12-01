@@ -21,6 +21,9 @@ public class Professional {
     private String avatar;
     private String thumbnail;
     private Date birthday;
+    private String gender;
+    private String lat;
+    private String lon;
 
     public Professional() {
     }
@@ -93,6 +96,30 @@ public class Professional {
         this.birthday = birthday;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
     public static Professional fromJson(JSONObject json) {
         Professional professional = null;
         try {
@@ -115,7 +142,14 @@ public class Professional {
             if (json.has("birthday")) {
                 professional.setBirthday(DateUtils.parseShortDateArg2(json.getString("birthday")));
             }
-
+            if (json.has("gender")) {
+                professional.setGender(json.getString("gender"));
+            }
+            if (json.has("address")) {
+                JSONObject add = json.getJSONObject("address");
+                professional.setLat(json.getString("lat"));
+                professional.setLon(json.getString("lon"));
+            }
         } catch (JSONException e) {
             throw new BusinessException("Error parsing Professional.", e);
         }
