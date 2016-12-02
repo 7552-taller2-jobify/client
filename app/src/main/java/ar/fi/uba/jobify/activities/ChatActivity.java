@@ -1,44 +1,31 @@
 package ar.fi.uba.jobify.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ar.fi.uba.jobify.adapters.ChatAdapter;
 import ar.fi.uba.jobify.domains.ChatMessage;
+import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import fi.uba.ar.jobify.R;
 
 public class ChatActivity extends AppCompatActivity {
@@ -48,23 +35,26 @@ public class ChatActivity extends AppCompatActivity {
     private FloatingActionButton sendBtn;
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
     public String myMail;
     public String friendMail;
-    String chatNode;
+    private String chatNode;
+    private MyPreferenceHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        helper = new MyPreferenceHelper(getApplicationContext());
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("chats");
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        friendMail = "pedro@gmail.com";
-        myMail = "facundosg@hotmail.com";
-        //friendMail = "facundosg@hotmail.com";
-        //myMail = "pedro@gmail.com";
+        Intent intent = getIntent();
+        String intentExtraUid = intent.getStringExtra(Intent.EXTRA_UID);
+        friendMail = intentExtraUid;
+        myMail = helper.getProfessional().getEmail();
+
         if (myMail.compareToIgnoreCase(friendMail) < 0){
             chatNode = myMail.replace('.','_') + "-" + friendMail.replace('.','_');
         }else {

@@ -1,5 +1,6 @@
 package ar.fi.uba.jobify.tasks.auth;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.fi.uba.jobify.activities.LoginActivity;
+import ar.fi.uba.jobify.activities.MustRegistryActivity;
 import ar.fi.uba.jobify.activities.RegistryActivity;
 import ar.fi.uba.jobify.domains.Register;
 import ar.fi.uba.jobify.domains.Token;
@@ -20,9 +22,9 @@ import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.ShowMessage;
 
-public class PostRegistryTask extends AbstractTask<String,Void,Register,RegistryActivity> {
+public class PostRegistryTask extends AbstractTask<String,Void,Register,MustRegistryActivity> {
 
-    public PostRegistryTask(RegistryActivity activity) {
+    public PostRegistryTask(MustRegistryActivity activity) {
         super(activity);
     }
 
@@ -37,6 +39,8 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,Registry
         String lat = params[6];
         String lon = params[7];
         String deviceId = params[8];
+        String face = null;
+        if (params.length > 9) face = params[9];
 
         String body = "{\"email\": \"" + email + "\"," +
                 "\"password\": \"" + password + "\"," +
@@ -53,7 +57,9 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,Registry
         headers.put("Content-Type", "application/json");
         Register register = null;
         try {
-            register = (Register) restClient.post("/users/register", body, headers);
+            String uri = "/users/register";
+            if (face!=null) uri += "?app=facebook";
+            register = (Register) restClient.post(uri, body, headers);
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
         } catch (final ServerErrorException e) {

@@ -24,7 +24,7 @@ import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 
-public class RegistryActivity extends AppCompatActivity implements PostRegistryTask.ResultRegistry {
+public class RegistryActivity extends MustRegistryActivity {
 
     private static final int REQUEST_SIGNUP = 0;
 

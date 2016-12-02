@@ -9,22 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import ar.fi.uba.jobify.domains.ForgotPassword;
-import ar.fi.uba.jobify.domains.Register;
-import ar.fi.uba.jobify.domains.Token;
-import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.auth.GetForgotPasswordTask;
-import ar.fi.uba.jobify.tasks.auth.PostLoginTask;
-import ar.fi.uba.jobify.tasks.auth.PostRegistryTask;
-import ar.fi.uba.jobify.utils.AppSettings;
-import ar.fi.uba.jobify.utils.FieldValidator;
-import ar.fi.uba.jobify.utils.MyPreferenceHelper;
-import ar.fi.uba.jobify.utils.MyPreferences;
-import ar.fi.uba.jobify.utils.ShowMessage;
-import fi.uba.ar.jobify.R;
-
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -41,8 +25,24 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import ar.fi.uba.jobify.domains.ForgotPassword;
+import ar.fi.uba.jobify.domains.Register;
+import ar.fi.uba.jobify.domains.Token;
+import ar.fi.uba.jobify.server.RestClient;
+import ar.fi.uba.jobify.tasks.auth.GetForgotPasswordTask;
+import ar.fi.uba.jobify.tasks.auth.PostLoginTask;
+import ar.fi.uba.jobify.tasks.auth.PostRegistryTask;
+import ar.fi.uba.jobify.utils.AppSettings;
+import ar.fi.uba.jobify.utils.FieldValidator;
+import ar.fi.uba.jobify.utils.LocationHelper;
+import ar.fi.uba.jobify.utils.MyPreferenceHelper;
+import ar.fi.uba.jobify.utils.MyPreferences;
+import ar.fi.uba.jobify.utils.ShowMessage;
+import fi.uba.ar.jobify.R;
 
-public class LoginActivity extends AppCompatActivity implements PostLoginTask.ResultLogin,GetForgotPasswordTask.ResultForgotPassword, PostRegistryTask.ResultRegistry {
+
+public class LoginActivity extends MustRegistryActivity implements PostLoginTask.ResultLogin,
+        GetForgotPasswordTask.ResultForgotPassword {
 
     private static final int REQUEST_SIGNUP = 0;
 
@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
     private ProgressDialog progressDialog;
     CallbackManager callbackManager;
     private LoginButton loginButtonFb;
+    private String emailFb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +66,7 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
 
         setContentView(R.layout.activity_login);
         pref.remove(getString(R.string.shared_pref_current_token));
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         loginButton = (Button) findViewById(R.id.activity_login_btn_login);
         emailText = (EditText) findViewById(R.id.activity_login_input_email);
         hostText = (EditText) findViewById(R.id.activity_login_host);
@@ -95,16 +94,21 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 try {
-                                    String email = object.getString("email");
+                                    emailFb = object.getString("email");
                                     String birthday = object.getString("birthday");
-                                    String id = object.getString("id");
-                                    String name = object.getString("name");
-                                    Log.d("email", email);
-                                    Log.d("birthday", birthday);
-                                    Log.d("id", id);
-                                    Log.d("name", name);
+                                    String firstName = object.getString("first_name");
+                                    String lastName = object.getString("last_name");
+                                    String gender = object.getString("gender");
                                     String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                                    Log.d("FCN TOKEN GET", "Refreshed token: " + refreshedToken);
+
+                                    LocationHelper loc = new LocationHelper();
+                                    loc.updatePosition(getApplicationContext());
+                                    String lat = pref.get(getString(R.string.shared_pref_current_location_lat), AppSettings.getGpsLat());
+                                    String lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
+                                    if (RestClient.isOnline(getApplicationContext())) {
+                                        new PostRegistryTask(LoginActivity.this).execute(
+                                                emailFb, "", firstName, lastName, gender, birthday, lat, lon, refreshedToken, "FACE");
+                                    }
 
 
                                 } catch (JSONException e) {
@@ -122,12 +126,13 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
 
             @Override
             public void onCancel() {
-
+                emailText.setText("");
+                passwordText.setText("");
             }
 
             @Override
             public void onError(FacebookException error) {
-
+                ShowMessage.toastMessage(getApplicationContext(), error.getMessage());
             }
         });
 
@@ -156,14 +161,13 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* if (requestCode == REQUEST_SIGNUP) {
+       if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
                 this.finish();
             }
         }
-        */
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+       //super.onActivityResult(requestCode, resultCode, data);
+        //callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -255,13 +259,10 @@ public class LoginActivity extends AppCompatActivity implements PostLoginTask.Re
 
     @Override
     public void onRegistrySuccess(Register register) {
-
-        if (register == null) {
-            Log.d("OnRegistrySucces","register == null");
-
-        } else {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+        if (register != null && RestClient.isOnline(this)) {
+            new PostLoginTask(this).execute(emailFb,"","FACE");
         }
     }
+
+
 }

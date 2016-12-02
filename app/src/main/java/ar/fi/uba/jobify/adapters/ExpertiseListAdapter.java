@@ -60,6 +60,14 @@ public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> impleme
         return (ProfileActivity) activity;
     }
 
+    public ProfileExpertiseResult getExpertises() {
+        ProfileExpertiseResult result = new ProfileExpertiseResult();
+        for(int i = 0; i < getCount(); i++) {
+            result.getExpertises().add(getItem(i));
+        }
+        return result;
+    }
+
     public void refresh(){
         this.clear();
         offset=0;

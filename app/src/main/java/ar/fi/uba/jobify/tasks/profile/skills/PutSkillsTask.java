@@ -30,16 +30,10 @@ public class PutSkillsTask extends AbstractTask<String,Void,String,ProfileActivi
     protected String doInBackground(String... params) {
         Context ctx = weakReference.get().getApplicationContext();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
-        String skills = params[0]; // esperamos tener un array separado por coma [lala,lele]
-        String categoryOlder = params[1];
-        String categoryNewer = params[2];
-        String body = "{"+
-                "\"skills\": \"" + skills + "\"," +
-                "\"category\": \"" + categoryNewer +
-        "\"}";
+        String body = params[0];
 
         try {
-            restClient.put("/users/"+helper.getProfessional().getEmail()+"/profile/skills/category/"+categoryOlder+"?token="+token, body, withAuth(ctx));
+            restClient.put("/users/"+helper.getProfessional().getEmail()+"/profile/skills/category?token="+token, body, withAuth(ctx));
         } catch (BusinessException e) {
             weakReference.get().showSnackbarSimpleMessage(e.getMessage());
         } catch (final Exception e) {
