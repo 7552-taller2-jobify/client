@@ -91,6 +91,12 @@
     <string name="personal_edition_skill_item_category">Categoria</string>
     <string name="personal_edition_skill_item_skills">Skills</string>
     <string name="personal_edition_exit">Salir</string>
+    <string name="menu_my_contacts_item_contact">Solicitar Amistad</string>
+    <string name="menu_my_contacts_item_chat">Chat</string>
+    <string name="menu_my_contacts_item_connect">Solicitar Amistad</string>
+    <string name="menu_my_contacts_item_unconnect">Desligar</string>
+    <string name="menu_my_contacts_item_vote">Votar</string>
+    <string name="menu_my_contacts_item_unvote">Quitar Voto</string>
 
 
 </resources>

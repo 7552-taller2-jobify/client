@@ -30,22 +30,27 @@ public class GetUsersTask extends AbstractTask<String,Void,ProfessionalSearchRes
     protected ProfessionalSearchResult doInBackground(String... params) {
         Context ctx = weakReference.get().getContext();
         String token = preferences.get(ctx.getString(R.string.shared_pref_current_token),"");
-        String offset = params[0];
-        String lat = params[1];
-        String lon = params[2];
-        String distance = params[3];
-        String position = params[4];
-        String skills = params[5];
+        String urlString;
+        if (params.length == 0) {
+            urlString = "/users?token="+token;
+        } else {
+            String offset = params[0];
+            String lat = params[1];
+            String lon = params[2];
+            String distance = params[3];
+            String position = params[4];
+            String skills = params[5];
 
-        String urlString = "/users?" +
-                "token="+token+
-                "&lat="+lat+
-                "&lon="+lon+
-                "&distance="+distance+
-                "&position="+position+
-                "&skills="+skills+
-                "&limit="+1000+
-                "&offset="+offset;
+            urlString = "/users?" +
+                    "token="+token+
+                    "&lat="+lat+
+                    "&lon="+lon+
+                    "&distance="+distance+
+                    "&position="+position+
+                    "&skills="+skills+
+                    "&limit="+1000+
+                    "&offset="+offset;
+        }
         ProfessionalSearchResult professionalSearchResult = null;
         try{
             professionalSearchResult = (ProfessionalSearchResult) restClient.get(urlString, withAuth(ctx));

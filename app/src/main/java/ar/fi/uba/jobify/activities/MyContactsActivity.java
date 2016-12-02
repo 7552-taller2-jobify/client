@@ -13,6 +13,7 @@ import ar.fi.uba.jobify.tasks.contact.PostContactAcceptTask;
 import ar.fi.uba.jobify.tasks.contact.PostContactRequestTask;
 import ar.fi.uba.jobify.tasks.recomendation.DeleteVoteTask;
 import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
+import ar.fi.uba.jobify.tasks.search.GetUsersTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
@@ -34,6 +35,7 @@ public class MyContactsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Mis contactos");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
     }
 
