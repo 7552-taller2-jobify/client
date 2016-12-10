@@ -18,17 +18,25 @@ import java.util.List;
 import ar.fi.uba.jobify.domains.ProfessionalFriendsResult;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import ar.fi.uba.jobify.server.RestClient;
+import ar.fi.uba.jobify.tasks.contact.DeleteContactRejectTask;
 import ar.fi.uba.jobify.tasks.contact.GetContactPendingTask;
 import ar.fi.uba.jobify.tasks.contact.GetMineContactListTask;
+import ar.fi.uba.jobify.tasks.contact.PostContactAcceptTask;
+import ar.fi.uba.jobify.tasks.recomendation.DeleteVoteTask;
+import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
+import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
 public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem>
         implements GetContactPendingTask.ContactAggregator,
-        GetMineContactListTask.ProfessionalListAggregator {
+        GetMineContactListTask.ProfessionalListAggregator,
+        PostContactAcceptTask.ContactAggregator,
+        DeleteContactRejectTask.ContactAggregator,
+        PostVoteTask.Recomendation, DeleteVoteTask.Recomendation{
 
     private static final int MY_FRIENDS = 0;
     private int request;
@@ -94,11 +102,6 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
     }
 
     @Override
-    public void onContactPendingSuccess(ProfessionalFriendsResult professionalFriendsResult) {
-        addFriends(professionalFriendsResult);
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ProfessionalSearchItem professional = this.getItem(position);
         ViewHolder holder;
@@ -129,12 +132,12 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
         //holder.distance.setText(showCoolDistance(getContext(), professional.getDistance()));
         //holder.address.setText(isContentValid(professional.getAddress()));
         holder.address.setText(""); // TODO smpiano cargar el address.
-        if (professional.getVotedByMe()) {
+        if (professional.getVotedByMe() != null && professional.getVotedByMe()) {
             convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
         } else {
             convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.GONE);
-            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility((professional.getVotedByMe()==null)?View.GONE:View.VISIBLE);
         }
         if (!isContentValid(professional.getAvatar()).isEmpty()) {
             Picasso.with(this.getContext()).load(professional.getAvatar()).transform(new CircleTransform()).into(holder.image);
@@ -154,5 +157,36 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
         public TextView professional_votes;
         public TextView distance;
         public ImageView image;
+    }
+
+
+    @Override
+    public void onContactPendingSuccess(ProfessionalFriendsResult professionalFriendsResult) {
+        addFriends(professionalFriendsResult);
+    }
+
+    @Override
+    public void onContactAcceptSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] solicitud aceptada.");
+        refresh();
+    }
+
+
+    @Override
+    public void onContactRejectSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] solicitud rechazada.");
+        refresh();
+    }
+
+    @Override
+    public void onUnvoteSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] me fallaste!");
+        refresh();
+    }
+
+    @Override
+    public void onVoteSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] recomendado.");
+        refresh();
     }
 }

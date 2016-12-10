@@ -52,6 +52,7 @@ public class ProfessionalViewPagerFragment extends Fragment {
     public class ProfessionalFriendsAdapter extends FragmentStatePagerAdapter {
 
         private final int MY_FRIENDS = 0;
+        private ProfessionalListFragment fragment;
 
         public ProfessionalFriendsAdapter(FragmentManager fm) {
             super(fm);
@@ -59,7 +60,7 @@ public class ProfessionalViewPagerFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new ProfessionalListFragment();
+            fragment = new ProfessionalListFragment();
             Bundle args = new Bundle();
             args.putInt("MY_FRIENDS", position);
             fragment.setArguments(args);
@@ -72,7 +73,12 @@ public class ProfessionalViewPagerFragment extends Fragment {
         }
 
         public CharSequence getPageTitle(int position) {
+            refresh();
             return getString((position == 0)? R.string.my_contacts_tab_friends : R.string.my_contacts_tab_solicitude);
+        }
+
+        public void refresh() {
+            fragment.refresh();
         }
     }
 

@@ -36,9 +36,15 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
     private ProfessionalSearchItem professionalSelected;
     private MyContactsActivity act;
     private int myFriendsRequest;
+    private ProfessionalListAdapter professionalListAdapter;
 
     public ProfessionalListFragment() {
         super();
+    }
+
+    public void refresh() {
+        if (professionalListAdapter != null)
+            professionalListAdapter.refresh();
     }
 
     @Override
@@ -57,7 +63,7 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
 
 
         //Defino el adapter
-        ProfessionalListAdapter professionalListAdapter = new ProfessionalListAdapter(
+        professionalListAdapter = new ProfessionalListAdapter(
                 getActivity(),
                 getContext(),
                 R.layout.list_professional_item,
@@ -97,12 +103,12 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
                     break;
                 case R.id.menu_my_contacts_item_vote:
                     if (RestClient.isOnline(getContext())) {
-                        new PostVoteTask( act ).execute(professionalSelected.getEmail());
+                        new PostVoteTask( professionalListAdapter ).execute(professionalSelected.getEmail());
                     }
                     break;
                 case R.id.menu_my_contacts_item_unvote:
                     if (RestClient.isOnline(getContext())) {
-                        new DeleteVoteTask( act ).execute(professionalSelected.getEmail());
+                        new DeleteVoteTask( professionalListAdapter ).execute(professionalSelected.getEmail());
                     }
                     break;
                 default:
@@ -112,12 +118,12 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
             switch (item.getItemId()) {
                 case R.id.menu_my_contacts_item_accept:
                     if (RestClient.isOnline(getContext())) {
-                        new PostContactAcceptTask( act ).execute(professionalSelected.getEmail());
+                        new PostContactAcceptTask( professionalListAdapter ).execute(professionalSelected.getEmail());
                     }
                     break;
                 case R.id.menu_my_contacts_item_reject:
                     if (RestClient.isOnline(getContext())) {
-                        new DeleteContactRejectTask( act ).execute(professionalSelected.getEmail());
+                        new DeleteContactRejectTask( professionalListAdapter ).execute(professionalSelected.getEmail());
                     }
                     break;
                 default:

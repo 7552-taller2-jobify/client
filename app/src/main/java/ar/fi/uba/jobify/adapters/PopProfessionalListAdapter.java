@@ -17,10 +17,8 @@ import java.util.List;
 
 import ar.fi.uba.jobify.domains.PopProfessionalSearchResult;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
-import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.tasks.search.GetPopUsersTask;
-import ar.fi.uba.jobify.tasks.search.GetUsersTask;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import fi.uba.ar.jobify.R;
@@ -114,12 +112,9 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
         //holder.distance.setText(showCoolDistance(getContext(), professional.getDistance()));
         //holder.address.setText(isContentValid(professional.getAddress()));
         holder.address.setText(""); // TODO smpiano cargar el address.
-        if (professional.getVotedByMe()) {
-            convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.VISIBLE);
-            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
-        } else {
+        if (professional.getVotedByMe() == null) {
             convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.GONE);
-            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
         }
         if (isContentValid(professional.getAvatar()).isEmpty()) {
             Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
@@ -138,4 +133,5 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
         public TextView distance;
         public ImageView image;
     }
+
 }

@@ -2,12 +2,12 @@
     <string name="app_name">Jobify</string>
 
     <!-- items del menu lateral -->
-    <string name="menu_contacts">Conctactos</string>
+    <string name="menu_contacts">Contactos</string>
     <string name="menu_profile">Perfil</string>
     <string name="menu_chat">Chat</string>
     <string name="menu_red">Red Profesionales</string>
     <string name="menu_search">Red Profesionales</string>
-    <string name="menu_login">Ingresa</string>
+    <string name="menu_pop_users">Usuarios Populares</string>
     <string name="menu_logout">Salir</string>
 
     <!-- actions -->
@@ -108,4 +108,5 @@
 
     <string name="my_contacts_tab_friends">Amigos</string>
     <string name="my_contacts_tab_solicitude">Solicitudes</string>
+    <string name="menu_login">Login</string>
 </resources>

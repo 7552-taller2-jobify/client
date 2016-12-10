@@ -13,10 +13,7 @@ import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
 import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
-public class MyContactsActivity extends AppCompatActivity
-        implements PostContactAcceptTask.ContactAggregator,
-        DeleteContactRejectTask.ContactAggregator,
-        PostVoteTask.Recomendation, DeleteVoteTask.Recomendation {
+public class MyContactsActivity extends AppCompatActivity {
 
     private TabLayout tabsLayout;
 
@@ -38,41 +35,5 @@ public class MyContactsActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tabsLayout = (TabLayout) findViewById(R.id.my_contacts_tabs);
-
-
-        /*
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_professional_pager);
-
-        ViewPager viewer = (ViewPager) findViewById(R.id.professional_view_pager);
-
-        //Defino el adapter
-        ProfessionalFriendsAdapter adapter = new ProfessionalFriendsAdapter(getSupportFragmentManager());
-        //Asocio la listView con el adapter
-        viewer.setAdapter(adapter);
-         */
-
-
-    }
-
-    @Override
-    public void onContactAcceptSuccess(String contact) {
-        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] solicitud aceptada.");
-    }
-
-
-    @Override
-    public void onContactRejectSuccess(String contact) {
-        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] solicitud rechazada.");
-    }
-
-    @Override
-    public void onUnvoteSuccess(String contact) {
-        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] me fallaste!");
-    }
-
-    @Override
-    public void onVoteSuccess(String contact) {
-        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] recomendado.");
     }
 }
