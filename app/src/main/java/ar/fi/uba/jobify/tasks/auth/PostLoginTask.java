@@ -25,12 +25,17 @@ public class PostLoginTask extends AbstractTask<String,Void,Token,LoginActivity>
     protected Token doInBackground(String... params) {
         String email = params[0];
         String pass = params[1];
+        String face = null;
+        if (params.length > 2) face = params[2];
+
         String body = "{\"email\": \""+email+"\",\"password\":\""+pass+"\"}";
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         Token token = null;
         try {
-            token = (Token) restClient.post("/users/login", body, headers);
+            String uri = "/users/login";
+            if (face!=null) uri += "?app=facebook";
+            token = (Token) restClient.post(uri, body, headers);
         } catch (BusinessException e) {
             ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
         } catch (final ServerErrorException e) {

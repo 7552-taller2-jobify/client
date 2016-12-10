@@ -48,6 +48,14 @@ public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetS
         return (ProfileActivity) activity;
     }
 
+    public ProfileSkillList getSkills() {
+        ProfileSkillList result = new ProfileSkillList();
+        for(int i = 0; i < getCount(); i++) {
+            result.getSkills().add(getItem(i));
+        }
+        return result;
+    }
+
     public void refresh(){
         this.clear();
         offset=0;

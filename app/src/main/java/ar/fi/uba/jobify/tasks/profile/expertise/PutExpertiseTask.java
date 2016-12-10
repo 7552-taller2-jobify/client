@@ -31,23 +31,7 @@ public class PutExpertiseTask extends AbstractTask<String,Void,String,ProfileAct
         Context ctx = weakReference.get().getApplicationContext();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
 
-        String company = params[0];
-        String positionOlder = params[1];
-        String from = params[2];
-        String to = params[3];
-        String expertise = params[4];
-        String category = params[5];
-        String positionNewer = params[6];
-
-        String body = "{"+
-            "\"company\": \"" + company+ "\"," +
-            "\"position\": \"" + positionNewer + "\"," +
-            "\"from\": \"" + from + "\"," +
-            "\"to\": \"" + to + "\"," +
-            "\"expertise\": \"" + expertise +
-            "\"category\": \"" + category +
-        "\"}";
-
+        String body = params[0];
         String uri = "/users/"+helper.getProfessional().getEmail()+"/profile/expertise?token="+token;
 
         try {

@@ -20,13 +20,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import ar.fi.uba.jobify.adapters.ExpertiseListAdapter;
 import ar.fi.uba.jobify.adapters.SkillListAdapter;
 import ar.fi.uba.jobify.domains.Professional;
+import ar.fi.uba.jobify.domains.ProfileExpertiseResult;
 import ar.fi.uba.jobify.domains.ProfilePersonal;
 import ar.fi.uba.jobify.domains.ProfilePicture;
+import ar.fi.uba.jobify.domains.ProfileSkillList;
 import ar.fi.uba.jobify.domains.ProfileSummary;
 import ar.fi.uba.jobify.fragments.DatePickerFragment;
 import ar.fi.uba.jobify.fragments.ExpertiseListFragment;
@@ -34,10 +37,12 @@ import ar.fi.uba.jobify.fragments.PersonalEditionFragment;
 import ar.fi.uba.jobify.fragments.SkillListFragment;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.service.InverseGeocodeService;
+import ar.fi.uba.jobify.tasks.profile.expertise.PutExpertiseTask;
 import ar.fi.uba.jobify.tasks.profile.personal.GetPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.personal.PutPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.picture.GetPictureTask;
 import ar.fi.uba.jobify.tasks.profile.picture.PutPictureTask;
+import ar.fi.uba.jobify.tasks.profile.skills.PutSkillsTask;
 import ar.fi.uba.jobify.tasks.profile.summary.GetSummaryTask;
 import ar.fi.uba.jobify.tasks.profile.summary.PutSummaryTask;
 import ar.fi.uba.jobify.utils.AppSettings;
@@ -61,7 +66,8 @@ public class ProfileActivity extends AppCompatActivity
         InverseGeocodeService.InverseGeocodeServiceResult,
         PutPersonalTask.ProfileEdit,
         PutSummaryTask.ProfileEdit,
-        PutPictureTask.ProfileEdit {
+        PutPictureTask.ProfileEdit,
+        PutExpertiseTask.ProfileEdit {
 
     private MyPreferences pref;
     private MyPreferenceHelper helper;
@@ -314,7 +320,16 @@ public class ProfileActivity extends AppCompatActivity
             //photo
             new PutPictureTask(this).execute(profileDetailPhoto.getText().toString());
 
+            // expertises
+            ProfileExpertiseResult r = expertiseListFragment.getAdapter().getExpertises();
+            Gson gson = new Gson();
+            String json = gson.toJson(r);
+            new PutExpertiseTask(this).execute(json);
 
+            // skills
+            ProfileSkillList s = skillListFragment.getAdapter().getSkills();
+            json = gson.toJson(s);
+            new PutSkillsTask(this).execute(json);
 
             // TODO smpiano save all.
             isReadMode = true;
@@ -494,5 +509,10 @@ public class ProfileActivity extends AppCompatActivity
     public void onProfileSummaryModificationSuccess() {
         new GetSummaryTask(this).execute(professionalId);
         afterPictureSave = true; // controla el profesional que manejamos
+    }
+
+    @Override
+    public void onProfileExpertiseModificationSuccess() {
+
     }
 }

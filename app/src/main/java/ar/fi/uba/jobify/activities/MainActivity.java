@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
 
 import ar.fi.uba.jobify.domains.Professional;
@@ -123,11 +125,6 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
         startActivity(intent);
     }
 
-    public void openChatActivity(View view) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
-    }
-
     public void openSearchActivity(View view) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
@@ -169,11 +166,6 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openProfileActivity(null);
-                                return true;
-                            case R.id.nav_chat:
-                                menuItem.setChecked(true);
-                                drawerLayout.closeDrawer(GravityCompat.START);
-                                openChatActivity(null);
                                 return true;
                             case R.id.nav_search:
                                 menuItem.setChecked(true);

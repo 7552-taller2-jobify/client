@@ -1,44 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
-        <android.support.v4.widget.NestedScrollView
+        <EditText
+            android:id="@+id/messageEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/chatSendButton"
+            android:autoText="true"
+            android:hint="Escribir mensaje" />
+
+
+        <ListView
+            android:id="@+id/messagesContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@+id/messageEdit"
+            android:layout_marginTop="26dp"
+            android:listSelector="@android:color/transparent"
+            android:transcriptMode="alwaysScroll"
+            android:divider="@null" />
 
-            <!-- Your scrolling content -->
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:weightSum="1">
-
-               <!-- FACUSAN codigo -->
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-
-        <android.support.design.widget.AppBarLayout
+        <TextView
+            android:id="@+id/friendLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:theme="@style/Base.ThemeOverlay.AppCompat.ActionBar">
+            android:layout_alignParentRight="true"
+            android:text="Contacto"
+            android:textSize="20dp" />
 
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:minHeight="233dp"
-                android:id="@+id/activity_registry_toolbar"
-                app:layout_scrollFlags="scroll|enterAlways"/>
 
-        </android.support.design.widget.AppBarLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/chatSendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@android:drawable/ic_menu_send"
+            android:layout_marginRight="13dp"
+            android:layout_marginEnd="13dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
+</LinearLayout>

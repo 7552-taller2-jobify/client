@@ -98,5 +98,9 @@
     <string name="menu_my_contacts_item_vote">Votar</string>
     <string name="menu_my_contacts_item_unvote">Quitar Voto</string>
 
+    <!-- Facebook -->
+    <string name="facebook_app_id">384574715223041</string>
+    <string name="fb_login_protocol_scheme">fb384574715223041</string>
 
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>
