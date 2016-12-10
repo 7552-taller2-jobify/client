@@ -49,6 +49,7 @@ import ar.fi.uba.jobify.tasks.profile.summary.GetSummaryTask;
 import ar.fi.uba.jobify.tasks.profile.summary.PutSummaryTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.DateUtils;
+import ar.fi.uba.jobify.utils.FieldValidator;
 import ar.fi.uba.jobify.utils.LocationHelper;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
@@ -427,15 +428,19 @@ public class ProfileActivity extends AppCompatActivity
             professionalUpdated.setGender(personal.getGender());
             professionalUpdated.setLat(personal.getLat());
             professionalUpdated.setLon(personal.getLon());
-            afterPersonalSave =false;
+            afterPersonalSave = false;
         }
 
-        Integer edad = DateUtils.getEdad(personal.getBirthday());
-        toolbarName.setTitle(isContentValid(personal.getFirstName())+" ("+edad+" años)");
+        if (personal.getBirthday() != null) {
+            Integer edad = DateUtils.getEdad(personal.getBirthday());
+            toolbarName.setTitle(isContentValid(personal.getFirstName()) + " (" + edad + " años)");
+        } else {
+            toolbarName.setTitle(isContentValid(personal.getFirstName()));
+        }
 
         personalEmail.setText(isContentValid(personal.getEmail()));
         personalName.setText(isContentValid(personal.getFullName()));
-        personalBirthday.setText(isContentValid(DateUtils.formatShortDateArg2(personal.getBirthday())));
+        personalBirthday.setText((personal.getBirthday()==null)? "":isContentValid(DateUtils.formatShortDateArg2(personal.getBirthday())));
         personalGender.setText(getString((isContentValid(personal.getGender()).equals("M"))? R.string.masculino : R.string.femenino));
 
 
