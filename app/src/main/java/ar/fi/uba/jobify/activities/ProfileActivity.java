@@ -217,9 +217,6 @@ public class ProfileActivity extends AppCompatActivity
 
     private void startCleanUpUI() {
 
-        profileExpertisesLabel.setVisibility(View.GONE);
-        profileSkillsLabel.setVisibility(View.GONE);
-
         if (isReadMode) {
             toolbarName.setTitle("");
 
@@ -486,8 +483,18 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     @Override
+    public void onExpertisesNotEmpty() {
+        profileExpertisesLabel.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onSkillEmpty() {
         profileSkillsLabel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSkillNotEmpty() {
+        profileSkillsLabel.setVisibility(View.GONE);
     }
 
     @Override

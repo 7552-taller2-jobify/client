@@ -64,14 +64,14 @@
     <string name="expertise_row_to"> &lt;-|123</string>
     <string name="cannot_display_map">No podemos mostrar información de la localización.</string>
     <string name="cannot_inverse_address_calc">No puede obtener la direccion inversa a lat y lon :(</string>
-    <string name="zero_expertises">No tienes experiecia cargada!</string>
+    <string name="zero_expertises">|--------------Experiecia</string>
     <string name="expertise_row_expertise">Experiencia</string>
     <string name="expertise_row_category">Categoria</string>
 
     <!-- skills -->
     <string name="skill_row_category">Categoria</string>
     <string name="skill_row_skills">Skills</string>
-    <string name="zero_skills">No Tiene Skills</string>
+    <string name="zero_skills">|--------------Skills</string>
     <string name="profile_detail_gender_m">Masculino</string>
     <string name="profile_detail_gender_f">Femenino</string>
     <string name="profile_save_current_address">Posición actual</string>
@@ -83,8 +83,8 @@
     <string name="menu_profile_edition_item_remove">Borrar</string>
     <string name="personal_edition_expertise_item_company">Company</string>
     <string name="personal_edition_expertise_item_position">Position</string>
-    <string name="personal_edition_expertise_item_from">Desde</string>
-    <string name="personal_edition_expertise_item_to">Hasta</string>
+    <string name="personal_edition_expertise_item_from">Desde dd-MM-yyyy</string>
+    <string name="personal_edition_expertise_item_to">Hasta dd-MM-yyyy</string>
     <string name="personal_edition_expertise_item_expertise">Experiencia</string>
     <string name="personal_edition_expertise_item_category">Categoria</string>
     <string name="personal_edition_skill_item_category">Categoria</string>

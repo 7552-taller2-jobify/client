@@ -89,6 +89,8 @@ public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetS
 
             if (total == 0) {
                 getActivity().onSkillEmpty();
+            } else {
+                getActivity().onSkillNotEmpty();
             }
         }else{
             Log.w(this.getClass().getCanonicalName(), "Algo salio mal agregando las skills.");
@@ -140,5 +142,6 @@ public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetS
 
     public interface SkillRead {
         public void onSkillEmpty();
+        public void onSkillNotEmpty();
     }
 }

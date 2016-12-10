@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
     }
 
     private void debugCardMessage(Location loc) {
-        String position = "POS HARD";
+        String position = "BIENVENIDO!!";
         if (loc != null) {
             position = "POS lat="+loc.getLatitude()+" lon="+ loc.getLongitude();
         }

@@ -93,7 +93,8 @@ android:fitsSystemWindows="true">
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        android:minHeight="50dp">
+        android:minHeight="50dp"
+        android:gravity="center">
 
         <TextView
             android:text="@string/forgot_pass"

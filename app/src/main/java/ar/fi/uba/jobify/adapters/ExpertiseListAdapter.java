@@ -101,6 +101,8 @@ public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> impleme
 
             if (total == 0) {
                 getActivity().onExpertisesEmpty();
+            } else {
+                getActivity().onExpertisesNotEmpty();
             }
         }else{
             Log.w(this.getClass().getCanonicalName(), "Algo salio mal agregando las experiencias.");
@@ -164,5 +166,6 @@ public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> impleme
 
     public interface ExpertisesRead {
         public void onExpertisesEmpty();
+        public void onExpertisesNotEmpty();
     }
 }
