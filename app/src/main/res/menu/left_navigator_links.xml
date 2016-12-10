@@ -11,17 +11,13 @@
             android:icon="@drawable/ic_account_card_details"
             android:title="@string/menu_profile" />
         <item
-            android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_email"
-            android:title="@string/menu_chat" />
-        <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_currency"
             android:title="@string/menu_search" />
         <item
-            android:id="@+id/nav_login"
-            android:icon="@drawable/ic_login"
-            android:title="@string/menu_login" />
+            android:id="@+id/nav_pop_users"
+            android:icon="@drawable/ic_star"
+            android:title="@string/menu_pop_users" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"

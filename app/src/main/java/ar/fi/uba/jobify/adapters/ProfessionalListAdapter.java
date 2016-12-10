@@ -15,21 +15,31 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ar.fi.uba.jobify.domains.Professional;
+import ar.fi.uba.jobify.domains.ProfessionalFriendsResult;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
-import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.search.GetPopUsersTask;
-import ar.fi.uba.jobify.tasks.search.GetUsersTask;
+import ar.fi.uba.jobify.tasks.contact.DeleteContactRejectTask;
+import ar.fi.uba.jobify.tasks.contact.GetContactPendingTask;
+import ar.fi.uba.jobify.tasks.contact.GetMineContactListTask;
+import ar.fi.uba.jobify.tasks.contact.PostContactAcceptTask;
+import ar.fi.uba.jobify.tasks.recomendation.DeleteVoteTask;
+import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
+import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
 public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem>
-        implements GetUsersTask.ProfessionalListAggregator {
+        implements GetContactPendingTask.ContactAggregator,
+        GetMineContactListTask.ProfessionalListAggregator,
+        PostContactAcceptTask.ContactAggregator,
+        DeleteContactRejectTask.ContactAggregator,
+        PostVoteTask.Recomendation, DeleteVoteTask.Recomendation{
 
+    private static final int MY_FRIENDS = 0;
+    private int request;
     private Location loc;
     private long total;
     private long offset;
@@ -39,12 +49,13 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
     private boolean defaultRequest = true;
 
     public ProfessionalListAdapter(Activity activity, Context context, int resource,
-                                   List<ProfessionalSearchItem> professionals) {
+                                   List<ProfessionalSearchItem> professionals, int request) {
         super(context, resource, professionals);
         this.activity = activity;
         total=1;
         offset=0;
         fetching=false;
+        this.request = request;
     }
 
     public Activity getActivity() {
@@ -67,36 +78,26 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            GetUsersTask listProfessionals = new GetUsersTask(ProfessionalListAdapter.this);
-            if (defaultRequest) {
-                listProfessionals.execute();
+            if (request == MY_FRIENDS) {
+                GetMineContactListTask friends = new GetMineContactListTask(this);
+                friends.execute();
             } else {
-                String offsetStr = String.valueOf(offset);
-                String lat = null;
-                String lon = null;
-                if (loc != null) {
-                    lat = String.valueOf(loc.getLatitude());
-                    lon = String.valueOf(loc.getLongitude());
-                }
-                String distance = "";
-                String position = "";
-                String skills = "";
-
-                listProfessionals.execute(offsetStr,lat,lon,distance,position,skills);
+                GetContactPendingTask listProfessionals = new GetContactPendingTask(this);
+                listProfessionals.execute();
             }
         }
     }
 
     @Override
-    public void addProfessionals(ProfessionalSearchResult professionalSearchResult) {
-        if(professionalSearchResult !=null) {
+    public void addFriends(ProfessionalFriendsResult professionalFriendsResult) {
+        if(professionalFriendsResult !=null) {
             //this.clear();
-            this.addAll(professionalSearchResult.getProfessionals());
+            this.addAll(professionalFriendsResult.getFriends());
             this.offset = this.getCount();
-            this.total = professionalSearchResult.getTotal();
+            this.total = professionalFriendsResult.getFriends().size();
             fetching = false;
         }else{
-            Log.w(this.getClass().getCanonicalName(), "Something when wrong getting professionals.");
+            Log.w(this.getClass().getCanonicalName(), "Something when wrong getting friends.");
         }
     }
 
@@ -114,10 +115,9 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
             convertView = mInflater.inflate(R.layout.list_professional_item, null);
 
             holder = new ViewHolder();
-            holder.professional_id = (TextView) convertView.findViewById(R.id.client_row_professional_id);
+            holder.professional_votes = (TextView) convertView.findViewById(R.id.client_row_professional_votes);
             holder.name = (TextView) convertView.findViewById(R.id.professional_row_name);
             holder.company = (TextView) convertView.findViewById(R.id.professional_row_company);
-            holder.distance = (TextView) convertView.findViewById(R.id.professional_row_client_distance);
             holder.address = (TextView) convertView.findViewById(R.id.professional_row_address);
             holder.image = (ImageView) convertView.findViewById(R.id.professional_row_picture);
             convertView.setTag(holder);
@@ -125,18 +125,26 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.professional_id.setText("12345678"); // TODO smpiano cantidad de contactos del profesional
+        holder.professional_votes.setText(isContentValid(professional.getVotes().toString()));
         holder.name.setText(isContentValid(professional.getLastName())+", "+isContentValid(professional.getName()));
         //holder.company.setText(isContentValid(professional.getCompany()));
         holder.company.setText(""); // TODO smpiano cargar el company.
         //holder.distance.setText(showCoolDistance(getContext(), professional.getDistance()));
-        holder.distance.setText(""); // TODO smpiano cargar la distance.
         //holder.address.setText(isContentValid(professional.getAddress()));
         holder.address.setText(""); // TODO smpiano cargar el address.
-        if (isContentValid(professional.getAvatar()).isEmpty()) {
-            Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
+        if (professional.getVotedByMe() != null && professional.getVotedByMe()) {
+            convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
         } else {
+            convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.GONE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility((professional.getVotedByMe()==null)?View.GONE:View.VISIBLE);
+        }
+        if (!isContentValid(professional.getAvatar()).isEmpty()) {
+            Picasso.with(this.getContext()).load(professional.getAvatar()).transform(new CircleTransform()).into(holder.image);
+        } else if (!isContentValid(professional.getThumbnail()).isEmpty()) {
             Picasso.with(this.getContext()).load(professional.getThumbnail()).transform(new CircleTransform()).into(holder.image);
+        } else {
+            Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
         }
 
         return convertView;
@@ -146,8 +154,39 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
         public TextView name;
         public TextView address;
         public TextView company;
-        public TextView professional_id;
+        public TextView professional_votes;
         public TextView distance;
         public ImageView image;
+    }
+
+
+    @Override
+    public void onContactPendingSuccess(ProfessionalFriendsResult professionalFriendsResult) {
+        addFriends(professionalFriendsResult);
+    }
+
+    @Override
+    public void onContactAcceptSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] solicitud aceptada.");
+        refresh();
+    }
+
+
+    @Override
+    public void onContactRejectSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] solicitud rechazada.");
+        refresh();
+    }
+
+    @Override
+    public void onUnvoteSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] me fallaste!");
+        refresh();
+    }
+
+    @Override
+    public void onVoteSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(activity.getCurrentFocus(),"["+contact+"] recomendado.");
+        refresh();
     }
 }

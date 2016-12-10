@@ -1,14 +1,8 @@
 package ar.fi.uba.jobify.fragments;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.opengl.ETC1;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.adapters.ContactListAdapter;
-import ar.fi.uba.jobify.adapters.ExpertiseListAdapter;
-import ar.fi.uba.jobify.adapters.SkillListAdapter;
-import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import ar.fi.uba.jobify.domains.ProfileExpertise;
 import ar.fi.uba.jobify.domains.ProfileSkill;
 import fi.uba.ar.jobify.R;
@@ -54,6 +42,7 @@ public class PersonalEditionFragment extends DialogFragment implements AdapterVi
     private EditText skillSkills;
     private boolean expertiseLayoutFlag = false;
     private View fragmentView;
+    private String professionalId;
 
     public PersonalEditionFragment() {
         super();
@@ -89,6 +78,7 @@ public class PersonalEditionFragment extends DialogFragment implements AdapterVi
         // TODO estaria bueno pasarle el adapter actual.
         arrayAdapter = (ArrayAdapter) getArguments().get("personalEditionAdapter");
         String layout = getArguments().getString("layout");
+        professionalId = getArguments().getString("professionalId");
         if (layout.equals("expertise")) {
             expertiseLayoutFlag = true;
             skillLayout.setVisibility(View.GONE);
@@ -132,6 +122,7 @@ public class PersonalEditionFragment extends DialogFragment implements AdapterVi
             profileExpertise.setFrom(expertiseFrom.getText().toString());
             profileExpertise.setTo(expertiseTo.getText().toString());
             profileExpertise.setExpertise(expertiseExpertise.getText().toString());
+            profileExpertise.setCategory(expertiseCategory.getText().toString());
             expertiseCompany.setText("");
             expertisePosition.setText("");
             expertiseFrom.setText("");

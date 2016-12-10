@@ -3,8 +3,11 @@ package ar.fi.uba.jobify.tasks.contact;
 import android.content.Context;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import ar.fi.uba.jobify.activities.MyContactsActivity;
+import ar.fi.uba.jobify.adapters.ProfessionalListAdapter;
+import ar.fi.uba.jobify.domains.ProfessionalFriendsResult;
 import ar.fi.uba.jobify.exceptions.ServerErrorException;
 import ar.fi.uba.jobify.tasks.AbstractTask;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -13,53 +16,54 @@ import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 
-public class GetContactPendingTask extends AbstractTask<String,Void,String,MyContactsActivity> {
+public class GetContactPendingTask extends AbstractTask<String,Void,ProfessionalFriendsResult,ProfessionalListAdapter> {
 
     private final MyPreferences pref;
     private MyPreferenceHelper helper;
 
-    public GetContactPendingTask(MyContactsActivity activity) {
-        super(activity);
-        helper = new MyPreferenceHelper(activity.getApplicationContext());
-        pref = new MyPreferences(activity.getApplicationContext());
+    public GetContactPendingTask(ProfessionalListAdapter adapter) {
+        super(adapter);
+        helper = new MyPreferenceHelper(adapter.getContext());
+        pref = new MyPreferences(adapter.getContext());
     }
 
     @Override
-    protected String doInBackground(String... params) {
-        Context ctx = weakReference.get();
+    protected ProfessionalFriendsResult doInBackground(String... params) {
+        Context ctx = weakReference.get().getContext();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
 
         String urlString = "/users/" + helper.getProfessional().getEmail() + "/contact?token="+token;
+        ProfessionalFriendsResult professionalFriendsResult = null;
         try{
-            restClient.get(urlString, withAuth(ctx));
+            professionalFriendsResult = (ProfessionalFriendsResult) restClient.get(urlString, withAuth(ctx));
         } catch (final ServerErrorException e) {
-            weakReference.get().runOnUiThread(new Runnable() {
+            weakReference.get().getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    ShowMessage.toastMessage(weakReference.get().getApplicationContext(), e.getMessage());
+                    ShowMessage.toastMessage(weakReference.get().getActivity().getApplicationContext(), e.getMessage());
                 }
             });
         } catch (final Exception e) {
-            weakReference.get().runOnUiThread(new Runnable() {
+            weakReference.get().getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getCurrentFocus(), e.getMessage());
+                    ShowMessage.showSnackbarSimpleMessage(weakReference.get().getActivity().getCurrentFocus(), e.getMessage());
                 }
             });
         }
-        return "ok";
+        return professionalFriendsResult;
     }
 
     @Override
     public Object readResponse(String json) throws JSONException {
-        return json;
+        return ProfessionalFriendsResult.fromJson(new JSONObject(json));
     }
 
     @Override
-    protected void onPostExecute(String str) {
-        weakReference.get().onContactPendingSuccess();
+    protected void onPostExecute(ProfessionalFriendsResult professionalFriendsResult) {
+        weakReference.get().onContactPendingSuccess(professionalFriendsResult);
     }
 
     public interface ContactAggregator {
-        public void onContactPendingSuccess();
+        public void onContactPendingSuccess(ProfessionalFriendsResult professionalFriendsResult);
     }
 
 }

@@ -58,6 +58,15 @@
                 android:value="ar.fi.uba.jobify.activities.MainActivity" />
         </activity>
         <activity
+            android:name="ar.fi.uba.jobify.activities.PopUsersActivity"
+            android:label="@string/menu_pop_users"
+            android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ar.fi.uba.jobify.activities.MainActivity" />
+        </activity>
+        <activity
             android:name="ar.fi.uba.jobify.activities.RegistryActivity"
             android:label="Registry"
             android:parentActivityName="ar.fi.uba.jobify.activities.MainActivity"

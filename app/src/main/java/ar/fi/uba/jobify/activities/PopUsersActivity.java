@@ -8,23 +8,18 @@ import ar.fi.uba.jobify.tasks.contact.PostContactRequestTask;
 import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
-public class SearchActivity extends AppCompatActivity implements PostContactRequestTask.ContactAggregator {
+public class PopUsersActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_pop_users);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Red de Profesionales");
+        getSupportActionBar().setTitle("Más Populares");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-    }
-
-    @Override
-    public void onContactRequestSuccess(String contact) {
-        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] solicitud pendiente.");
     }
 }

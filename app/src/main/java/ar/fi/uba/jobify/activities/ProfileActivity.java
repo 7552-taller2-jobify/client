@@ -37,16 +37,19 @@ import ar.fi.uba.jobify.fragments.PersonalEditionFragment;
 import ar.fi.uba.jobify.fragments.SkillListFragment;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.service.InverseGeocodeService;
+import ar.fi.uba.jobify.tasks.profile.expertise.GetExpertiseTask;
 import ar.fi.uba.jobify.tasks.profile.expertise.PutExpertiseTask;
 import ar.fi.uba.jobify.tasks.profile.personal.GetPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.personal.PutPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.picture.GetPictureTask;
 import ar.fi.uba.jobify.tasks.profile.picture.PutPictureTask;
+import ar.fi.uba.jobify.tasks.profile.skills.GetSkillsTask;
 import ar.fi.uba.jobify.tasks.profile.skills.PutSkillsTask;
 import ar.fi.uba.jobify.tasks.profile.summary.GetSummaryTask;
 import ar.fi.uba.jobify.tasks.profile.summary.PutSummaryTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.DateUtils;
+import ar.fi.uba.jobify.utils.FieldValidator;
 import ar.fi.uba.jobify.utils.LocationHelper;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
@@ -67,7 +70,8 @@ public class ProfileActivity extends AppCompatActivity
         PutPersonalTask.ProfileEdit,
         PutSummaryTask.ProfileEdit,
         PutPictureTask.ProfileEdit,
-        PutExpertiseTask.ProfileEdit {
+        PutExpertiseTask.ProfileEdit,
+        PutSkillsTask.ProfileEdit {
 
     private MyPreferences pref;
     private MyPreferenceHelper helper;
@@ -148,17 +152,22 @@ public class ProfileActivity extends AppCompatActivity
         }
 
 
+        //bundle par fragments
+        Bundle b = new Bundle();
+        b.putString("professionalId", professionalId);
         // inflating the expertise fragment
         expertisesView = (CardView) findViewById(R.id.profile_view_expertises);
         expertiseListFragment = new ExpertiseListFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.profile_view_expertises, expertiseListFragment).commit();
+        expertiseListFragment.setArguments(b);
 
         //inflating the skills fragment
         skillsView = (CardView) findViewById(R.id.profile_view_skills);
         skillListFragment = new SkillListFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.profile_view_skills, skillListFragment).commit();
+        skillListFragment.setArguments(b);
 
 
         // TODO edition time.
@@ -271,7 +280,8 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     public void showSnackbarSimpleMessage(String msg){
-        ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
+        if (this.getCurrentFocus() != null)
+            ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
     }
 
     @Override
@@ -352,6 +362,7 @@ public class ProfileActivity extends AppCompatActivity
             Bundle args = new Bundle();
             args.putSerializable("personalEditionAdapter", expertiseListFragment.getAdapter());
             args.putString("layout", "expertise");
+            args.putString("professionalId", professionalId);
             personalEditionFragment.setArguments(args);
             personalEditionFragment.show(getSupportFragmentManager(), "");
 
@@ -363,6 +374,7 @@ public class ProfileActivity extends AppCompatActivity
             Bundle args = new Bundle();
             args.putSerializable("personalEditionAdapter", skillListFragment.getAdapter());
             args.putString("layout", "skill");
+            args.putString("professionalId", professionalId);
             personalEditionFragment.setArguments(args);
             personalEditionFragment.show(getSupportFragmentManager(), "");
 
@@ -416,15 +428,19 @@ public class ProfileActivity extends AppCompatActivity
             professionalUpdated.setGender(personal.getGender());
             professionalUpdated.setLat(personal.getLat());
             professionalUpdated.setLon(personal.getLon());
-            afterPersonalSave =false;
+            afterPersonalSave = false;
         }
 
-        Integer edad = DateUtils.getEdad(personal.getBirthday());
-        toolbarName.setTitle(isContentValid(personal.getFirstName())+" ("+edad+" años)");
+        if (personal.getBirthday() != null) {
+            Integer edad = DateUtils.getEdad(personal.getBirthday());
+            toolbarName.setTitle(isContentValid(personal.getFirstName()) + " (" + edad + " años)");
+        } else {
+            toolbarName.setTitle(isContentValid(personal.getFirstName()));
+        }
 
         personalEmail.setText(isContentValid(personal.getEmail()));
         personalName.setText(isContentValid(personal.getFullName()));
-        personalBirthday.setText(isContentValid(DateUtils.formatShortDateArg2(personal.getBirthday())));
+        personalBirthday.setText((personal.getBirthday()==null)? "":isContentValid(DateUtils.formatShortDateArg2(personal.getBirthday())));
         personalGender.setText(getString((isContentValid(personal.getGender()).equals("M"))? R.string.masculino : R.string.femenino));
 
 
@@ -513,6 +529,11 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onProfileExpertiseModificationSuccess() {
+
+    }
+
+    @Override
+    public void onProfileSkillModificationSuccess() {
 
     }
 }

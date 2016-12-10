@@ -3,6 +3,7 @@ package ar.fi.uba.jobify.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.menu.MenuView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -16,10 +17,15 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 
 import ar.fi.uba.jobify.activities.ChatActivity;
+import ar.fi.uba.jobify.activities.MyContactsActivity;
 import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.adapters.ContactListAdapter;
 import ar.fi.uba.jobify.adapters.ProfessionalListAdapter;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
+import ar.fi.uba.jobify.server.RestClient;
+import ar.fi.uba.jobify.tasks.contact.DeleteContactRejectTask;
+import ar.fi.uba.jobify.tasks.contact.PostContactAcceptTask;
+import ar.fi.uba.jobify.tasks.recomendation.DeleteVoteTask;
+import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
 import fi.uba.ar.jobify.R;
 
 /**
@@ -28,14 +34,25 @@ import fi.uba.ar.jobify.R;
 public class ProfessionalListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ProfessionalSearchItem professionalSelected;
+    private MyContactsActivity act;
+    private int myFriendsRequest;
+    private ProfessionalListAdapter professionalListAdapter;
 
     public ProfessionalListFragment() {
         super();
     }
 
+    public void refresh() {
+        if (professionalListAdapter != null)
+            professionalListAdapter.refresh();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        act = (MyContactsActivity) getActivity();
+        myFriendsRequest = getArguments().getInt("MY_FRIENDS");
 
         //inflo la vista de listado de elementos
         View fragmentView = inflater.inflate(R.layout.fragment_professional_list, container, false);
@@ -44,12 +61,13 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
         //desplegable
         registerForContextMenu(professionalList);
 
+
         //Defino el adapter
-        ProfessionalListAdapter professionalListAdapter = new ProfessionalListAdapter(
+        professionalListAdapter = new ProfessionalListAdapter(
                 getActivity(),
                 getContext(),
                 R.layout.list_professional_item,
-                new ArrayList<ProfessionalSearchItem>());
+                new ArrayList<ProfessionalSearchItem>(), myFriendsRequest);
         //Asocio la listView con el adapter
         professionalList.setAdapter(professionalListAdapter);
         professionalList.setOnItemClickListener(this);
@@ -76,22 +94,41 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_my_contacts_item_connect:
-                break;
-            case R.id.menu_my_contacts_item_unconnect:
-                break;
-            case R.id.menu_my_contacts_item_chat:
-                Intent intent = new Intent(getContext(), ChatActivity.class);
-                intent.putExtra(Intent.EXTRA_UID, professionalSelected.getEmail());
-                startActivity(intent);
-                break;
-            case R.id.menu_my_contacts_item_vote:
-                break;
-            case R.id.menu_my_contacts_item_unvote:
-                break;
-            default:
-                return super.onContextItemSelected(item);
+        if (myFriendsRequest == 0) {
+            switch (item.getItemId()) {
+                case R.id.menu_my_contacts_item_chat:
+                    Intent intent = new Intent(getContext(), ChatActivity.class);
+                    intent.putExtra(Intent.EXTRA_UID, professionalSelected.getEmail());
+                    startActivity(intent);
+                    break;
+                case R.id.menu_my_contacts_item_vote:
+                    if (RestClient.isOnline(getContext())) {
+                        new PostVoteTask( professionalListAdapter ).execute(professionalSelected.getEmail());
+                    }
+                    break;
+                case R.id.menu_my_contacts_item_unvote:
+                    if (RestClient.isOnline(getContext())) {
+                        new DeleteVoteTask( professionalListAdapter ).execute(professionalSelected.getEmail());
+                    }
+                    break;
+                default:
+                    return super.onContextItemSelected(item);
+            }
+        } else {
+            switch (item.getItemId()) {
+                case R.id.menu_my_contacts_item_accept:
+                    if (RestClient.isOnline(getContext())) {
+                        new PostContactAcceptTask( professionalListAdapter ).execute(professionalSelected.getEmail());
+                    }
+                    break;
+                case R.id.menu_my_contacts_item_reject:
+                    if (RestClient.isOnline(getContext())) {
+                        new DeleteContactRejectTask( professionalListAdapter ).execute(professionalSelected.getEmail());
+                    }
+                    break;
+                default:
+                    return super.onContextItemSelected(item);
+            }
         }
         return true;
     }
@@ -104,6 +141,18 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
         professionalSelected = (ProfessionalSearchItem) lv.getItemAtPosition(acmi.position);
 
         MenuInflater inflater = new MenuInflater(this.getContext());
-        inflater.inflate(R.menu.menu_my_contacts_item, menu);
+        inflater.inflate((myFriendsRequest == 0)? R.menu.menu_my_friends_item : R.menu.menu_my_solicitud_contacts_item, menu);
+
+        //TODO smpiano vote.
+        if (myFriendsRequest == 0) {
+            if (professionalSelected.getVotedByMe()) {
+                menu.findItem(R.id.menu_my_contacts_item_vote).setVisible(false);
+                menu.findItem(R.id.menu_my_contacts_item_unvote).setVisible(true);
+            } else {
+                menu.findItem(R.id.menu_my_contacts_item_vote).setVisible(true);
+                menu.findItem(R.id.menu_my_contacts_item_unvote).setVisible(false);
+            }
+        }
+
     }
 }

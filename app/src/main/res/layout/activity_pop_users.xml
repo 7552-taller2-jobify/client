@@ -31,12 +31,12 @@
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/professional_search_fragment"
-            android:name="ar.fi.uba.jobify.fragments.ProfessionalSearchFragment"
+            android:id="@+id/professional_pop_users_fragment"
+            android:name="ar.fi.uba.jobify.fragments.ProfessionalPopUsersFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:layout="@layout/fragment_professional_search" />
+            tools:layout="@layout/fragment_professional_pop_users" />
     </android.support.design.widget.CoordinatorLayout>
 
 

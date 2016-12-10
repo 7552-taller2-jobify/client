@@ -14,8 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
 
 import ar.fi.uba.jobify.domains.Professional;
@@ -135,6 +133,11 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
         startActivity(intent);
     }
 
+    public void openPopUsersActivity(View view) {
+        Intent intent = new Intent(this, PopUsersActivity.class);
+        startActivity(intent);
+    }
+
     public void openLogoutActivity(View view) {
         ShowMessage.toastMessage(getApplicationContext(), getString(R.string.goodby_message));
         if (RestClient.isOnline(this)) {
@@ -157,10 +160,10 @@ public class MainActivity extends AppCompatActivity implements DeleteLogoutTask.
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 openMyClientsActivity(null);
                                 return true;
-                            case R.id.nav_login:
+                            case R.id.nav_pop_users:
                                 menuItem.setChecked(true);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                openLoginActivity(null);
+                                openPopUsersActivity(null);
                                 return true;
                             case R.id.nav_profile:
                                 menuItem.setChecked(true);

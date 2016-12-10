@@ -15,28 +15,30 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ar.fi.uba.jobify.domains.PopProfessionalSearchResult;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
+import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.search.GetPopUsersTask;
+import ar.fi.uba.jobify.tasks.search.GetUsersTask;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
 import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
-public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem>
-        implements GetPopUsersTask.ProfessionalListAggregator {
+public class ProfessionalSearchAdapter extends ArrayAdapter<ProfessionalSearchItem>
+        implements GetUsersTask.ProfessionalListAggregator {
 
+    private int request;
     private Location loc;
     private long total;
     private long offset;
     private boolean fetching;
     private Activity activity;
     private MyPreferences pref = new MyPreferences(getContext());
+    private boolean defaultRequest = true;
 
-    public PopProfessionalListAdapter(Activity activity, Context context, int resource,
-                                      List<ProfessionalSearchItem> professionals) {
+    public ProfessionalSearchAdapter(Activity activity, Context context, int resource,
+                                     List<ProfessionalSearchItem> professionals) {
         super(context, resource, professionals);
         this.activity = activity;
         total=1;
@@ -64,12 +66,28 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            new GetPopUsersTask(PopProfessionalListAdapter.this).execute();
+            GetUsersTask listProfessionals = new GetUsersTask(this);
+            if (defaultRequest) {
+                listProfessionals.execute();
+            } else {
+                String offsetStr = String.valueOf(offset);
+                String lat = null;
+                String lon = null;
+                if (loc != null) {
+                    lat = String.valueOf(loc.getLatitude());
+                    lon = String.valueOf(loc.getLongitude());
+                }
+                String distance = "";
+                String position = "";
+                String skills = "";
+
+                listProfessionals.execute(offsetStr,lat,lon,distance,position,skills);
+            }
         }
     }
 
     @Override
-    public void addPopularProfessionals(PopProfessionalSearchResult professionalSearchResult) {
+    public void addProfessionals(ProfessionalSearchResult professionalSearchResult) {
         if(professionalSearchResult !=null) {
             //this.clear();
             this.addAll(professionalSearchResult.getProfessionals());
@@ -116,10 +134,12 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
             convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.GONE);
             convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
         }
-        if (isContentValid(professional.getAvatar()).isEmpty()) {
-            Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
-        } else {
+        if (!isContentValid(professional.getAvatar()).isEmpty()) {
+            Picasso.with(this.getContext()).load(professional.getAvatar()).transform(new CircleTransform()).into(holder.image);
+        } else if (!isContentValid(professional.getThumbnail()).isEmpty()) {
             Picasso.with(this.getContext()).load(professional.getThumbnail()).transform(new CircleTransform()).into(holder.image);
+        } else {
+            Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
         }
 
         return convertView;
@@ -133,5 +153,4 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
         public TextView distance;
         public ImageView image;
     }
-
 }

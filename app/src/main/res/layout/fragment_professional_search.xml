@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/contactListView"
+    android:id="@+id/professional_search_view"
     android:layout_weight="1"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_my_contacts">
+    tools:showIn="@layout/activity_search">
 </ListView>
