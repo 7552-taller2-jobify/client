@@ -97,10 +97,9 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
             convertView = mInflater.inflate(R.layout.list_professional_item, null);
 
             holder = new ViewHolder();
-            holder.professional_id = (TextView) convertView.findViewById(R.id.client_row_professional_id);
+            holder.professional_votes = (TextView) convertView.findViewById(R.id.client_row_professional_votes);
             holder.name = (TextView) convertView.findViewById(R.id.professional_row_name);
             holder.company = (TextView) convertView.findViewById(R.id.professional_row_company);
-            holder.distance = (TextView) convertView.findViewById(R.id.professional_row_client_distance);
             holder.address = (TextView) convertView.findViewById(R.id.professional_row_address);
             holder.image = (ImageView) convertView.findViewById(R.id.professional_row_picture);
             convertView.setTag(holder);
@@ -108,14 +107,20 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.professional_id.setText("12345678"); // TODO smpiano cantidad de contactos del profesional
+        holder.professional_votes.setText(isContentValid(professional.getVotes().toString()));
         holder.name.setText(isContentValid(professional.getLastName())+", "+isContentValid(professional.getName()));
         //holder.company.setText(isContentValid(professional.getCompany()));
         holder.company.setText(""); // TODO smpiano cargar el company.
         //holder.distance.setText(showCoolDistance(getContext(), professional.getDistance()));
-        holder.distance.setText(""); // TODO smpiano cargar la distance.
         //holder.address.setText(isContentValid(professional.getAddress()));
         holder.address.setText(""); // TODO smpiano cargar el address.
+        if (professional.getVotedByMe()) {
+            convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
+        } else {
+            convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.GONE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.VISIBLE);
+        }
         if (isContentValid(professional.getAvatar()).isEmpty()) {
             Picasso.with(this.getContext()).load(R.drawable.logo).transform(new CircleTransform()).into(holder.image);
         } else {
@@ -129,7 +134,7 @@ public class PopProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchI
         public TextView name;
         public TextView address;
         public TextView company;
-        public TextView professional_id;
+        public TextView professional_votes;
         public TextView distance;
         public ImageView image;
     }

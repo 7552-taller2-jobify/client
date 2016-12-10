@@ -43,7 +43,7 @@ public class ExpertiseListFragment extends Fragment implements AdapterView.OnIte
                 getActivity(),
                 getContext(),
                 R.layout.list_expertise_item,
-                new ArrayList<ProfileExpertise>());
+                new ArrayList<ProfileExpertise>(), getArguments().getString("professionalId"));
         //Asocio la listView con el adapter
         contactsList.setAdapter(expertiseListAdapter);
         contactsList.setOnItemClickListener(this);

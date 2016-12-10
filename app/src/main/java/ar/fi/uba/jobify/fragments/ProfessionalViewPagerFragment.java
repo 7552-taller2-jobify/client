@@ -2,6 +2,7 @@ package ar.fi.uba.jobify.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ar.fi.uba.jobify.activities.MyContactsActivity;
 import fi.uba.ar.jobify.R;
 
 /**
@@ -19,6 +21,7 @@ import fi.uba.ar.jobify.R;
 public class ProfessionalViewPagerFragment extends Fragment {
 
     private ViewPager viewer;
+    private TabLayout tabsLayout;
 
     @Nullable
     @Override
@@ -29,11 +32,19 @@ public class ProfessionalViewPagerFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_professional_pager, container, false);
         viewer = (ViewPager) fragmentView.findViewById(R.id.professional_view_pager);
 
-
         //Defino el adapter
         ProfessionalFriendsAdapter adapter = new ProfessionalFriendsAdapter(getFragmentManager());
         //Asocio la listView con el adapter
         viewer.setAdapter(adapter);
+
+        viewer.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                TabLayout tab = ((MyContactsActivity) getActivity()).getTabsLayout();
+                tab.getTabAt(position);
+                tab.setupWithViewPager(viewer);
+            }
+        });
 
         return fragmentView;
     }
@@ -60,9 +71,8 @@ public class ProfessionalViewPagerFragment extends Fragment {
             return 2; // tenemos 2 fragments
         }
 
-        @Override
         public CharSequence getPageTitle(int position) {
-            return "LALALAALA"+(position+1);
+            return getString((position == 0)? R.string.my_contacts_tab_friends : R.string.my_contacts_tab_solicitude);
         }
     }
 

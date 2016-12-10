@@ -42,6 +42,7 @@ public class PersonalEditionFragment extends DialogFragment implements AdapterVi
     private EditText skillSkills;
     private boolean expertiseLayoutFlag = false;
     private View fragmentView;
+    private String professionalId;
 
     public PersonalEditionFragment() {
         super();
@@ -77,6 +78,7 @@ public class PersonalEditionFragment extends DialogFragment implements AdapterVi
         // TODO estaria bueno pasarle el adapter actual.
         arrayAdapter = (ArrayAdapter) getArguments().get("personalEditionAdapter");
         String layout = getArguments().getString("layout");
+        professionalId = getArguments().getString("professionalId");
         if (layout.equals("expertise")) {
             expertiseLayoutFlag = true;
             skillLayout.setVisibility(View.GONE);

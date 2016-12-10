@@ -55,35 +55,51 @@
 
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_gravity="right"
             android:gravity="right"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/client_row_professional_heart_empty"
+                    android:src="@drawable/ic_heart_empty"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_heart"
+                    android:id="@+id/client_row_professional_heart"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_star"
+                android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/client_row_professional_id"
+                android:id="@+id/client_row_professional_votes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:gravity="right"
                 android:text="# 123"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/professional_row_client_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:maxLines="1"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                android:text="3,4 km" />
+                android:layout_weight="0.06"
+                android:layout_marginTop="4dp" />
 
         </LinearLayout>
 

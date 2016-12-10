@@ -26,6 +26,7 @@ import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
 public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetSkillsTask.ProfileRead, Serializable {
 
+    private final String professionalId;
     private long total;
     private long offset;
     private boolean fetching;
@@ -34,7 +35,7 @@ public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetS
     private final MyPreferenceHelper helper;
 
     public SkillListAdapter(Activity activity, Context context, int resource,
-                            List<ProfileSkill> profileSkills) {
+                            List<ProfileSkill> profileSkills, String professionalId) {
         super(context, resource, profileSkills);
         this.activity = activity;
         total=1;
@@ -42,6 +43,7 @@ public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetS
         fetching=false;
         pref = new MyPreferences(getContext());
         helper = new MyPreferenceHelper(getContext());
+        this.professionalId = professionalId;
     }
 
     public ProfileActivity getActivity() {
@@ -72,7 +74,7 @@ public class SkillListAdapter extends ArrayAdapter<ProfileSkill> implements GetS
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            (new GetSkillsTask(this)).execute(helper.getProfessional().getEmail(), String.valueOf(offset));
+            (new GetSkillsTask(this)).execute(professionalId, String.valueOf(offset));
         }
     }
 

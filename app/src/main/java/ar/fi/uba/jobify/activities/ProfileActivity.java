@@ -37,11 +37,13 @@ import ar.fi.uba.jobify.fragments.PersonalEditionFragment;
 import ar.fi.uba.jobify.fragments.SkillListFragment;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.service.InverseGeocodeService;
+import ar.fi.uba.jobify.tasks.profile.expertise.GetExpertiseTask;
 import ar.fi.uba.jobify.tasks.profile.expertise.PutExpertiseTask;
 import ar.fi.uba.jobify.tasks.profile.personal.GetPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.personal.PutPersonalTask;
 import ar.fi.uba.jobify.tasks.profile.picture.GetPictureTask;
 import ar.fi.uba.jobify.tasks.profile.picture.PutPictureTask;
+import ar.fi.uba.jobify.tasks.profile.skills.GetSkillsTask;
 import ar.fi.uba.jobify.tasks.profile.skills.PutSkillsTask;
 import ar.fi.uba.jobify.tasks.profile.summary.GetSummaryTask;
 import ar.fi.uba.jobify.tasks.profile.summary.PutSummaryTask;
@@ -149,17 +151,22 @@ public class ProfileActivity extends AppCompatActivity
         }
 
 
+        //bundle par fragments
+        Bundle b = new Bundle();
+        b.putString("professionalId", professionalId);
         // inflating the expertise fragment
         expertisesView = (CardView) findViewById(R.id.profile_view_expertises);
         expertiseListFragment = new ExpertiseListFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.profile_view_expertises, expertiseListFragment).commit();
+        expertiseListFragment.setArguments(b);
 
         //inflating the skills fragment
         skillsView = (CardView) findViewById(R.id.profile_view_skills);
         skillListFragment = new SkillListFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.profile_view_skills, skillListFragment).commit();
+        skillListFragment.setArguments(b);
 
 
         // TODO edition time.
@@ -354,6 +361,7 @@ public class ProfileActivity extends AppCompatActivity
             Bundle args = new Bundle();
             args.putSerializable("personalEditionAdapter", expertiseListFragment.getAdapter());
             args.putString("layout", "expertise");
+            args.putString("professionalId", professionalId);
             personalEditionFragment.setArguments(args);
             personalEditionFragment.show(getSupportFragmentManager(), "");
 
@@ -365,6 +373,7 @@ public class ProfileActivity extends AppCompatActivity
             Bundle args = new Bundle();
             args.putSerializable("personalEditionAdapter", skillListFragment.getAdapter());
             args.putString("layout", "skill");
+            args.putString("professionalId", professionalId);
             personalEditionFragment.setArguments(args);
             personalEditionFragment.show(getSupportFragmentManager(), "");
 

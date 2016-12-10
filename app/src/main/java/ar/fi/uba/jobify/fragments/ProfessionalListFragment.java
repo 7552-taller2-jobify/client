@@ -3,6 +3,7 @@ package ar.fi.uba.jobify.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.menu.MenuView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -135,5 +136,17 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
 
         MenuInflater inflater = new MenuInflater(this.getContext());
         inflater.inflate((myFriendsRequest == 0)? R.menu.menu_my_friends_item : R.menu.menu_my_solicitud_contacts_item, menu);
+
+        //TODO smpiano vote.
+        if (myFriendsRequest == 0) {
+            if (professionalSelected.getVotedByMe()) {
+                menu.findItem(R.id.menu_my_contacts_item_vote).setVisible(false);
+                menu.findItem(R.id.menu_my_contacts_item_unvote).setVisible(true);
+            } else {
+                menu.findItem(R.id.menu_my_contacts_item_vote).setVisible(true);
+                menu.findItem(R.id.menu_my_contacts_item_unvote).setVisible(false);
+            }
+        }
+
     }
 }

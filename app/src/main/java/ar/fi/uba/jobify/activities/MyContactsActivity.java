@@ -1,6 +1,7 @@
 package ar.fi.uba.jobify.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,6 +18,12 @@ public class MyContactsActivity extends AppCompatActivity
         DeleteContactRejectTask.ContactAggregator,
         PostVoteTask.Recomendation, DeleteVoteTask.Recomendation {
 
+    private TabLayout tabsLayout;
+
+    public TabLayout getTabsLayout() {
+        return tabsLayout;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +36,8 @@ public class MyContactsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Mis contactos");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        tabsLayout = (TabLayout) findViewById(R.id.my_contacts_tabs);
 
 
         /*

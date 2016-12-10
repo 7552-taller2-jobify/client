@@ -15,11 +15,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ar.fi.uba.jobify.domains.ProfessionalFriendsResult;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.contact.GetMineContactListTask;
 import ar.fi.uba.jobify.tasks.search.GetUsersTask;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
@@ -115,10 +113,9 @@ public class ProfessionalSearchAdapter extends ArrayAdapter<ProfessionalSearchIt
             convertView = mInflater.inflate(R.layout.list_professional_item, null);
 
             holder = new ViewHolder();
-            holder.professional_id = (TextView) convertView.findViewById(R.id.client_row_professional_id);
+            holder.professional_votes = (TextView) convertView.findViewById(R.id.client_row_professional_votes);
             holder.name = (TextView) convertView.findViewById(R.id.professional_row_name);
             holder.company = (TextView) convertView.findViewById(R.id.professional_row_company);
-            holder.distance = (TextView) convertView.findViewById(R.id.professional_row_client_distance);
             holder.address = (TextView) convertView.findViewById(R.id.professional_row_address);
             holder.image = (ImageView) convertView.findViewById(R.id.professional_row_picture);
             convertView.setTag(holder);
@@ -126,14 +123,17 @@ public class ProfessionalSearchAdapter extends ArrayAdapter<ProfessionalSearchIt
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.professional_id.setText("12345678"); // TODO smpiano cantidad de contactos del profesional
+        holder.professional_votes.setText(isContentValid(professional.getVotes().toString()));
         holder.name.setText(isContentValid(professional.getLastName())+", "+isContentValid(professional.getName()));
         //holder.company.setText(isContentValid(professional.getCompany()));
         holder.company.setText(""); // TODO smpiano cargar el company.
         //holder.distance.setText(showCoolDistance(getContext(), professional.getDistance()));
-        holder.distance.setText(""); // TODO smpiano cargar la distance.
         //holder.address.setText(isContentValid(professional.getAddress()));
         holder.address.setText(""); // TODO smpiano cargar el address.
+        if (professional.getVotedByMe() == null) {
+            convertView.findViewById(R.id.client_row_professional_heart).setVisibility(View.GONE);
+            convertView.findViewById(R.id.client_row_professional_heart_empty).setVisibility(View.GONE);
+        }
         if (!isContentValid(professional.getAvatar()).isEmpty()) {
             Picasso.with(this.getContext()).load(professional.getAvatar()).transform(new CircleTransform()).into(holder.image);
         } else if (!isContentValid(professional.getThumbnail()).isEmpty()) {
@@ -149,7 +149,7 @@ public class ProfessionalSearchAdapter extends ArrayAdapter<ProfessionalSearchIt
         public TextView name;
         public TextView address;
         public TextView company;
-        public TextView professional_id;
+        public TextView professional_votes;
         public TextView distance;
         public ImageView image;
     }

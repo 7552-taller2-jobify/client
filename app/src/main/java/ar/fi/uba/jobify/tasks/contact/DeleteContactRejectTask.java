@@ -37,7 +37,7 @@ public class DeleteContactRejectTask extends AbstractTask<String,Void,String,MyC
         Calendar c = Calendar.getInstance();
         String dateStr = DateUtils.formatDate(c.getTime());
 
-        String urlString = "/users/" + helper.getProfessional().getEmail() + "/accept"+
+        String urlString = "/users/" + helper.getProfessional().getEmail() + "/reject"+
                 "?token="+token+
                 "&date="+dateStr+
                 "&email="+otherEmail;

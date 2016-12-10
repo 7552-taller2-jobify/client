@@ -38,6 +38,7 @@ import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
 public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> implements GetExpertiseTask.ProfileRead, Serializable {
 
+    private final String professionalId;
     private long total;
     private long offset;
     private boolean fetching;
@@ -46,7 +47,7 @@ public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> impleme
     private final MyPreferenceHelper helper;
 
     public ExpertiseListAdapter(Activity activity, Context context, int resource,
-                                List<ProfileExpertise> expertises) {
+                                List<ProfileExpertise> expertises, String professionalId) {
         super(context, resource, expertises);
         this.activity = activity;
         total=1;
@@ -54,6 +55,7 @@ public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> impleme
         fetching=false;
         pref = new MyPreferences(getContext());
         helper = new MyPreferenceHelper(getContext());
+        this.professionalId = professionalId;
     }
 
     public ProfileActivity getActivity() {
@@ -84,7 +86,7 @@ public class ExpertiseListAdapter extends ArrayAdapter<ProfileExpertise> impleme
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            (new GetExpertiseTask(this)).execute(helper.getProfessional().getEmail(), String.valueOf(offset));
+            (new GetExpertiseTask(this)).execute(professionalId, String.valueOf(offset));
         }
     }
 

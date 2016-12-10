@@ -43,7 +43,7 @@ public class SkillListFragment extends Fragment implements AdapterView.OnItemCli
                 getActivity(),
                 getContext(),
                 R.layout.list_skill_item,
-                new ArrayList<ProfileSkill>());
+                new ArrayList<ProfileSkill>(), getArguments().getString("professionalId"));
         //Asocio la listView con el adapter
         contactsList.setAdapter(skillListAdapter);
         contactsList.setOnItemClickListener(this);

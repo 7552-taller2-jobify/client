@@ -94,8 +94,8 @@
     <string name="menu_my_contacts_item_chat">Chat</string>
     <string name="menu_my_contacts_item_connect">Solicitar Amistad</string>
     <string name="menu_my_contacts_item_unconnect">Desligar</string>
-    <string name="menu_my_contacts_item_vote">Votar</string>
-    <string name="menu_my_contacts_item_unvote">Quitar Voto</string>
+    <string name="menu_my_contacts_item_vote">Recomendar</string>
+    <string name="menu_my_contacts_item_unvote">No Recomendar</string>
 
     <!-- Facebook -->
     <string name="facebook_app_id">384574715223041</string>
@@ -105,4 +105,7 @@
     <string name="menu_my_contacts_item_accept">Aceptar</string>
     <string name="menu_my_contacts_item_reject">Rechazar</string>
     <string name="menu_my_contacts_item_request">Solicitar Amistad</string>
+
+    <string name="my_contacts_tab_friends">Amigos</string>
+    <string name="my_contacts_tab_solicitude">Solicitudes</string>
 </resources>
