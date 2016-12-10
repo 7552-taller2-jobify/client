@@ -21,6 +21,7 @@ public class ProfessionalSearchItem {
     private Date birthday;
     private String distance;
     private Integer votes;
+    private Boolean votedByMe;
 
     public ProfessionalSearchItem() {
     }
@@ -101,6 +102,14 @@ public class ProfessionalSearchItem {
         this.votes = votes;
     }
 
+    public Boolean getVotedByMe() {
+        return votedByMe;
+    }
+
+    public void setVotedByMe(Boolean votedByMe) {
+        this.votedByMe = votedByMe;
+    }
+
     public static ProfessionalSearchItem fromJson(JSONObject json) {
         ProfessionalSearchItem professional = null;
         try {
@@ -124,6 +133,9 @@ public class ProfessionalSearchItem {
             }
             if (json.has("votes")) {
                 professional.setVotes(json.getInt("votes"));
+            }
+            if (json.has("voted_by_me")) {
+                professional.setVotedByMe(json.getBoolean("voted_by_me"));
             }
 
         } catch (JSONException e) {

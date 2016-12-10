@@ -15,14 +15,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ar.fi.uba.jobify.domains.Professional;
 import ar.fi.uba.jobify.domains.ProfessionalFriendsResult;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.server.RestClient;
-import ar.fi.uba.jobify.tasks.contact.GetContactPendingTask;
 import ar.fi.uba.jobify.tasks.contact.GetMineContactListTask;
-import ar.fi.uba.jobify.tasks.search.GetPopUsersTask;
 import ar.fi.uba.jobify.tasks.search.GetUsersTask;
 import ar.fi.uba.jobify.utils.CircleTransform;
 import ar.fi.uba.jobify.utils.MyPreferences;
@@ -30,11 +27,9 @@ import fi.uba.ar.jobify.R;
 
 import static ar.fi.uba.jobify.utils.FieldValidator.isContentValid;
 
-public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem>
-        implements GetContactPendingTask.ContactAggregator,
-        GetMineContactListTask.ProfessionalListAggregator {
+public class ProfessionalSearchAdapter extends ArrayAdapter<ProfessionalSearchItem>
+        implements GetUsersTask.ProfessionalListAggregator {
 
-    private static final int MY_FRIENDS = 0;
     private int request;
     private Location loc;
     private long total;
@@ -44,14 +39,13 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
     private MyPreferences pref = new MyPreferences(getContext());
     private boolean defaultRequest = true;
 
-    public ProfessionalListAdapter(Activity activity, Context context, int resource,
-                                   List<ProfessionalSearchItem> professionals, int request) {
+    public ProfessionalSearchAdapter(Activity activity, Context context, int resource,
+                                     List<ProfessionalSearchItem> professionals) {
         super(context, resource, professionals);
         this.activity = activity;
         total=1;
         offset=0;
         fetching=false;
-        this.request = request;
     }
 
     public Activity getActivity() {
@@ -74,32 +68,37 @@ public class ProfessionalListAdapter extends ArrayAdapter<ProfessionalSearchItem
 
     private void solveTask() {
         if (RestClient.isOnline(getContext())) {
-            if (request == MY_FRIENDS) {
-                GetMineContactListTask friends = new GetMineContactListTask(this);
-                friends.execute();
-            } else {
-                GetContactPendingTask listProfessionals = new GetContactPendingTask(this);
+            GetUsersTask listProfessionals = new GetUsersTask(this);
+            if (defaultRequest) {
                 listProfessionals.execute();
+            } else {
+                String offsetStr = String.valueOf(offset);
+                String lat = null;
+                String lon = null;
+                if (loc != null) {
+                    lat = String.valueOf(loc.getLatitude());
+                    lon = String.valueOf(loc.getLongitude());
+                }
+                String distance = "";
+                String position = "";
+                String skills = "";
+
+                listProfessionals.execute(offsetStr,lat,lon,distance,position,skills);
             }
         }
     }
 
     @Override
-    public void addFriends(ProfessionalFriendsResult professionalFriendsResult) {
-        if(professionalFriendsResult !=null) {
+    public void addProfessionals(ProfessionalSearchResult professionalSearchResult) {
+        if(professionalSearchResult !=null) {
             //this.clear();
-            this.addAll(professionalFriendsResult.getFriends());
+            this.addAll(professionalSearchResult.getProfessionals());
             this.offset = this.getCount();
-            this.total = professionalFriendsResult.getFriends().size();
+            this.total = professionalSearchResult.getTotal();
             fetching = false;
         }else{
-            Log.w(this.getClass().getCanonicalName(), "Something when wrong getting friends.");
+            Log.w(this.getClass().getCanonicalName(), "Something when wrong getting professionals.");
         }
-    }
-
-    @Override
-    public void onContactPendingSuccess(ProfessionalFriendsResult professionalFriendsResult) {
-        addFriends(professionalFriendsResult);
     }
 
     @Override

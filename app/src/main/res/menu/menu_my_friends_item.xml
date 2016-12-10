@@ -2,24 +2,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ar.fi.uba.jobify.fragments.ProfessionalListFragment">
-    <item android:id="@+id/menu_my_contacts_item_connect"
-        android:title="@string/menu_my_contacts_item_connect"
-        android:orderInCategory="1"
-        app:showAsAction="never" />
-    <item android:id="@+id/menu_my_contacts_item_unconnect"
-        android:title="@string/menu_my_contacts_item_unconnect"
-        android:orderInCategory="2"
-        app:showAsAction="never" />
     <item android:id="@+id/menu_my_contacts_item_chat"
         android:title="@string/menu_my_contacts_item_chat"
-        android:orderInCategory="3"
+        android:orderInCategory="1"
         app:showAsAction="never" />
     <item android:id="@+id/menu_my_contacts_item_vote"
         android:title="@string/menu_my_contacts_item_vote"
-        android:orderInCategory="4"
+        android:orderInCategory="2"
         app:showAsAction="never" />
     <item android:id="@+id/menu_my_contacts_item_unvote"
         android:title="@string/menu_my_contacts_item_unvote"
-        android:orderInCategory="5"
+        android:orderInCategory="3"
         app:showAsAction="never" />
 </menu>

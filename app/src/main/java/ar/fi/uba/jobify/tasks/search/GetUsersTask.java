@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import ar.fi.uba.jobify.adapters.ProfessionalListAdapter;
+import ar.fi.uba.jobify.adapters.ProfessionalSearchAdapter;
 import ar.fi.uba.jobify.domains.Professional;
 import ar.fi.uba.jobify.domains.ProfessionalSearchResult;
 import ar.fi.uba.jobify.tasks.AbstractTask;
@@ -16,12 +17,12 @@ import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 
-public class GetUsersTask extends AbstractTask<String,Void,ProfessionalSearchResult,ProfessionalListAdapter> {
+public class GetUsersTask extends AbstractTask<String,Void,ProfessionalSearchResult,ProfessionalSearchAdapter> {
 
     private List<Professional> contacts;
     private MyPreferences preferences;
 
-    public GetUsersTask(ProfessionalListAdapter adapter) {
+    public GetUsersTask(ProfessionalSearchAdapter adapter) {
         super(adapter);
         preferences = new MyPreferences(adapter.getContext());
     }

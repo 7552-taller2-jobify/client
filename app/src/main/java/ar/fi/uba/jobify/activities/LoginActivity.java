@@ -34,6 +34,7 @@ import ar.fi.uba.jobify.tasks.auth.GetForgotPasswordTask;
 import ar.fi.uba.jobify.tasks.auth.PostLoginTask;
 import ar.fi.uba.jobify.tasks.auth.PostRegistryTask;
 import ar.fi.uba.jobify.utils.AppSettings;
+import ar.fi.uba.jobify.utils.DateUtils;
 import ar.fi.uba.jobify.utils.FieldValidator;
 import ar.fi.uba.jobify.utils.LocationHelper;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
@@ -97,7 +98,7 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 try {
                                     emailFb = object.getString("email");
-                                    String birthday = object.has("birthday")? object.getString("birthday") : "";
+                                    String birthday = object.has("birthday")? DateUtils.formatFacebook(object.getString("birthday")) : "";
                                     String firstName = object.has("first_name")? object.getString("first_name") : "";
                                     String lastName = object.has("last_name")? object.getString("last_name") : "";
                                     String gender = object.has("gender")? (object.getString("gender").equals("male")? "M" : "F") : "";

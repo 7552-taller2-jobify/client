@@ -18,11 +18,14 @@ import java.util.ArrayList;
 import ar.fi.uba.jobify.activities.ChatActivity;
 import ar.fi.uba.jobify.activities.MyContactsActivity;
 import ar.fi.uba.jobify.activities.ProfileActivity;
+import ar.fi.uba.jobify.activities.SearchActivity;
 import ar.fi.uba.jobify.adapters.ProfessionalListAdapter;
+import ar.fi.uba.jobify.adapters.ProfessionalSearchAdapter;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import ar.fi.uba.jobify.server.RestClient;
 import ar.fi.uba.jobify.tasks.contact.DeleteContactRejectTask;
 import ar.fi.uba.jobify.tasks.contact.PostContactAcceptTask;
+import ar.fi.uba.jobify.tasks.contact.PostContactRequestTask;
 import ar.fi.uba.jobify.tasks.recomendation.DeleteVoteTask;
 import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
 import fi.uba.ar.jobify.R;
@@ -30,13 +33,12 @@ import fi.uba.ar.jobify.R;
 /**
  * Created by smpiano on 9/28/16.
  */
-public class ProfessionalListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ProfessionalSearchFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ProfessionalSearchItem professionalSelected;
-    private MyContactsActivity act;
-    private int myFriendsRequest;
+    private SearchActivity act;
 
-    public ProfessionalListFragment() {
+    public ProfessionalSearchFragment() {
         super();
     }
 
@@ -44,32 +46,30 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        act = (MyContactsActivity) getActivity();
-        myFriendsRequest = getArguments().getInt("MY_FRIENDS");
+        act = (SearchActivity) getActivity();
 
         //inflo la vista de listado de elementos
-        View fragmentView = inflater.inflate(R.layout.fragment_professional_list, container, false);
-        ListView professionalList = (ListView) fragmentView.findViewById(R.id.professional_list_view);
+        View fragmentView = inflater.inflate(R.layout.fragment_professional_search, container, false);
+        ListView professionalList = (ListView) fragmentView.findViewById(R.id.professional_search_view);
 
         //desplegable
         registerForContextMenu(professionalList);
 
-
         //Defino el adapter
-        ProfessionalListAdapter professionalListAdapter = new ProfessionalListAdapter(
+        ProfessionalSearchAdapter professionalSearchAdapter = new ProfessionalSearchAdapter(
                 getActivity(),
                 getContext(),
                 R.layout.list_professional_item,
-                new ArrayList<ProfessionalSearchItem>(), myFriendsRequest);
+                new ArrayList<ProfessionalSearchItem>());
         //Asocio la listView con el adapter
-        professionalList.setAdapter(professionalListAdapter);
+        professionalList.setAdapter(professionalSearchAdapter);
         professionalList.setOnItemClickListener(this);
 
         // Si tarda mucho debería mostrar una barra de progreso
         ProgressBar bar= new ProgressBar(getContext());
         bar.setIndeterminate(true);
         professionalList.setEmptyView(bar);
-        professionalListAdapter.refresh();
+        professionalSearchAdapter.refresh();
         return fragmentView;
     }
 
@@ -87,41 +87,14 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (myFriendsRequest == 0) {
-            switch (item.getItemId()) {
-                case R.id.menu_my_contacts_item_chat:
-                    Intent intent = new Intent(getContext(), ChatActivity.class);
-                    intent.putExtra(Intent.EXTRA_UID, professionalSelected.getEmail());
-                    startActivity(intent);
-                    break;
-                case R.id.menu_my_contacts_item_vote:
-                    if (RestClient.isOnline(getContext())) {
-                        new PostVoteTask( act ).execute(professionalSelected.getEmail());
-                    }
-                    break;
-                case R.id.menu_my_contacts_item_unvote:
-                    if (RestClient.isOnline(getContext())) {
-                        new DeleteVoteTask( act ).execute(professionalSelected.getEmail());
-                    }
-                    break;
-                default:
-                    return super.onContextItemSelected(item);
-            }
-        } else {
-            switch (item.getItemId()) {
-                case R.id.menu_my_contacts_item_accept:
-                    if (RestClient.isOnline(getContext())) {
-                        new PostContactAcceptTask( act ).execute(professionalSelected.getEmail());
-                    }
-                    break;
-                case R.id.menu_my_contacts_item_reject:
-                    if (RestClient.isOnline(getContext())) {
-                        new DeleteContactRejectTask( act ).execute(professionalSelected.getEmail());
-                    }
-                    break;
-                default:
-                    return super.onContextItemSelected(item);
-            }
+        switch (item.getItemId()) {
+            case R.id.menu_my_contacts_item_request:
+                if (RestClient.isOnline(getContext())) {
+                    new PostContactRequestTask( act ).execute(professionalSelected.getEmail());
+                }
+                break;
+            default:
+                return super.onContextItemSelected(item);
         }
         return true;
     }
@@ -134,6 +107,6 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
         professionalSelected = (ProfessionalSearchItem) lv.getItemAtPosition(acmi.position);
 
         MenuInflater inflater = new MenuInflater(this.getContext());
-        inflater.inflate((myFriendsRequest == 0)? R.menu.menu_my_friends_item : R.menu.menu_my_solicitud_contacts_item, menu);
+        inflater.inflate(R.menu.menu_my_request_friends_item, menu);
     }
 }

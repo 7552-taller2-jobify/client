@@ -343,7 +343,6 @@
                     android:layout_column="1"
                     android:textSize="18sp"
                     android:layout_margin="16dp"
-                    android:text="@string/profile_photo_text"
                     android:layout_marginRight="50dp"
                     android:hint="@string/profile_photo"
                     android:layout_weight="0.22" />

@@ -1,6 +1,5 @@
 package ar.fi.uba.jobify.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,10 +11,7 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.adapters.ContactListAdapter;
 import ar.fi.uba.jobify.adapters.ExpertiseListAdapter;
-import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
 import ar.fi.uba.jobify.domains.ProfileExpertise;
 import fi.uba.ar.jobify.R;
 

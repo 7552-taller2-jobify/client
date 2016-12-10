@@ -63,4 +63,14 @@ public class DateUtils {
         double yearsBetween = timeBetween / 3.156e+10;
         return (int) Math.floor(yearsBetween);
     }
+
+    public static String formatFacebook(String birth) {
+        SimpleDateFormat fbDate = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            return SHORT_FORMATTER_ARG_2.format(fbDate.parse(birth));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

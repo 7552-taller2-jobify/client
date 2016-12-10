@@ -20,6 +20,7 @@ public class PostContactAcceptTask extends AbstractTask<String,Void,String,MyCon
 
     private final MyPreferences pref;
     private MyPreferenceHelper helper;
+    private String otherEmail;
 
     public PostContactAcceptTask(MyContactsActivity activity) {
         super(activity);
@@ -31,7 +32,7 @@ public class PostContactAcceptTask extends AbstractTask<String,Void,String,MyCon
     protected String doInBackground(String... params) {
         Context ctx = weakReference.get();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
-        String otherEmail = params[0];
+        otherEmail = params[0];
 
         Calendar c = Calendar.getInstance();
         String dateStr = DateUtils.formatDate(c.getTime());
@@ -65,11 +66,11 @@ public class PostContactAcceptTask extends AbstractTask<String,Void,String,MyCon
 
     @Override
     protected void onPostExecute(String str) {
-        weakReference.get().onContactAcceptSuccess();
+        weakReference.get().onContactAcceptSuccess(otherEmail);
     }
 
     public interface ContactAggregator {
-        public void onContactAcceptSuccess();
+        public void onContactAcceptSuccess(String contact);
     }
 
 }

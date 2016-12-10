@@ -272,7 +272,8 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     public void showSnackbarSimpleMessage(String msg){
-        ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
+        if (this.getCurrentFocus() != null)
+            ShowMessage.showSnackbarSimpleMessage(this.getCurrentFocus(), msg);
     }
 
     @Override
@@ -325,7 +326,7 @@ public class ProfileActivity extends AppCompatActivity
             ProfileExpertiseResult r = expertiseListFragment.getAdapter().getExpertises();
             Gson gson = new Gson();
             String json = gson.toJson(r);
-            //new PutExpertiseTask(this).execute(json);
+            new PutExpertiseTask(this).execute(json);
 
             // skills
             ProfileSkillList s = skillListFragment.getAdapter().getSkills();

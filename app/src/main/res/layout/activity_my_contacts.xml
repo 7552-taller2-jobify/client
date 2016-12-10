@@ -2,6 +2,7 @@
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -28,7 +29,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        <!--fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/professional_list_fragment"
@@ -36,7 +37,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:layout="@layout/fragment_professional_list" />
+            tools:layout="@layout/fragment_professional_list" /-->
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/professional_pager_fragment"
+            android:name="ar.fi.uba.jobify.fragments.ProfessionalViewPagerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="57dp"
+            tools:layout="@layout/fragment_professional_pager" />
 
     </android.support.design.widget.CoordinatorLayout>
 

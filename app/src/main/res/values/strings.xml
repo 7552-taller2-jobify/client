@@ -6,7 +6,7 @@
     <string name="menu_profile">Perfil</string>
     <string name="menu_chat">Chat</string>
     <string name="menu_red">Red Profesionales</string>
-    <string name="menu_search">Buscar</string>
+    <string name="menu_search">Red Profesionales</string>
     <string name="menu_login">Ingresa</string>
     <string name="menu_logout">Salir</string>
 
@@ -77,7 +77,6 @@
     <string name="profile_save_current_address">Posición actual</string>
     <string name="profile_photo_label">Foto URL</string>
     <string name="profile_photo">http://</string>
-    <string name="profile_photo_text">Foto</string>
 
     <!-- edition mode -->
     <string name="personal_edition_add">Agregar</string>
@@ -103,4 +102,7 @@
     <string name="fb_login_protocol_scheme">fb384574715223041</string>
 
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="menu_my_contacts_item_accept">Aceptar</string>
+    <string name="menu_my_contacts_item_reject">Rechazar</string>
+    <string name="menu_my_contacts_item_request">Solicitar Amistad</string>
 </resources>
