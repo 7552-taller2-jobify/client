@@ -16,6 +16,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -61,8 +62,9 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
         super.onCreate(savedInstanceState);
         //Facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
+        LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
-        AppEventsLogger.activateApp(this);
+        AppEventsLogger.activateApp(getApplication());
 
         setContentView(R.layout.activity_login);
         pref.remove(getString(R.string.shared_pref_current_token));
@@ -82,7 +84,7 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
                 login();
             }
         });
-        loginButtonFb.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
+        loginButtonFb.setReadPermissions(Arrays.asList("public_profile,email,user_birthday"));
         callbackManager = CallbackManager.Factory.create();
 
         loginButtonFb.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -95,11 +97,16 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 try {
                                     emailFb = object.getString("email");
-                                    String birthday = object.getString("birthday");
-                                    String firstName = object.getString("first_name");
-                                    String lastName = object.getString("last_name");
-                                    String gender = object.getString("gender");
+                                    String birthday = object.has("birthday")? object.getString("birthday") : "";
+                                    String firstName = object.has("first_name")? object.getString("first_name") : "";
+                                    String lastName = object.has("last_name")? object.getString("last_name") : "";
+                                    String gender = object.has("gender")? (object.getString("gender").equals("male")? "M" : "F") : "";
+                                    String picture= object.has("picture")? object.getJSONObject("picture").has("data") ?
+                                            object.getJSONObject("picture").getJSONObject("data").has("url")?
+                                            object.getJSONObject("picture").getJSONObject("data").getString("url") : "" : "" : "";
                                     String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+
+                                    Log.d("FacebookLogin", "[emailfb="+emailFb+",birth="+birthday+",fName="+firstName+"lName="+lastName+",gender="+gender+"faceToken="+refreshedToken+"]");
 
                                     LocationHelper loc = new LocationHelper();
                                     loc.updatePosition(getApplicationContext());
@@ -107,18 +114,22 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
                                     String lon = pref.get(getString(R.string.shared_pref_current_location_lon), AppSettings.getGpsLon());
                                     if (RestClient.isOnline(getApplicationContext())) {
                                         new PostRegistryTask(LoginActivity.this).execute(
-                                                emailFb, "", firstName, lastName, gender, birthday, lat, lon, refreshedToken, "FACE");
+                                                emailFb, "", firstName, lastName, gender, birthday, lat, lon, refreshedToken, picture);
+
                                     }
 
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                } finally {
+                                    LoginActivity.this.finish();
                                 }
                             }
+
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,gender, birthday");
+                parameters.putString("fields", "id,first_name,last_name,email,gender,birthday,picture.type(large)");
                 request.setParameters(parameters);
                 request.executeAsync();
 
@@ -166,8 +177,9 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
                 this.finish();
             }
         }
-       //super.onActivityResult(requestCode, resultCode, data);
-        //callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -186,7 +198,9 @@ public class LoginActivity extends MustRegistryActivity implements PostLoginTask
 
     public void onLoginSuccess(Token token) {
         findViewById(R.id.activity_login_btn_login).setEnabled(true);
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
         if (token == null) {
             emailText.setText("");
             passwordText.setText("");

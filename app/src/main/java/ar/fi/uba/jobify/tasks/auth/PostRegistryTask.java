@@ -39,8 +39,12 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,MustRegi
         String lat = params[6];
         String lon = params[7];
         String deviceId = params[8];
-        String face = null;
-        if (params.length > 9) face = params[9];
+        Boolean face = null;
+        String picture = "";
+        if (params.length > 9) {
+            face = true;
+            picture = params[9];
+        }
 
         String body = "{\"email\": \"" + email + "\"," +
                 "\"password\": \"" + password + "\"," +
@@ -49,6 +53,7 @@ public class PostRegistryTask extends AbstractTask<String,Void,Register,MustRegi
                 "\"last_name\": \"" + lastName + "\"," +
                 "\"gender\": \"" + gender + "\"," +
                 "\"birthday\": \"" + birthday + "\"," +
+                ((!picture.isEmpty())? "\"picture\": \"" + picture + "\"," : " ") +
                 "\"address\": {" +
                 "\"lat\": \"" + lat + "\"," +
                 "\"lon\": \"" + lon + "\"" +
