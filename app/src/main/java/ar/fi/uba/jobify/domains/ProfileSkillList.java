@@ -14,14 +14,14 @@ import ar.fi.uba.jobify.exceptions.BusinessException;
  */
 public class ProfileSkillList {
 
-    private List<ProfileSkill> skills;
+    private List<ProfileSkill> every_skill;
 
     public ProfileSkillList() {
-        this.skills = new ArrayList<ProfileSkill>();
+        this.every_skill = new ArrayList<ProfileSkill>();
     }
 
     public List<ProfileSkill> getSkills() {
-        return skills;
+        return every_skill;
     }
 
     public static ProfileSkillList fromJson(JSONObject json) {

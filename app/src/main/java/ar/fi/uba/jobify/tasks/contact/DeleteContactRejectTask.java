@@ -20,6 +20,7 @@ public class DeleteContactRejectTask extends AbstractTask<String,Void,String,MyC
 
     private final MyPreferences pref;
     private MyPreferenceHelper helper;
+    private String otherEmail;
 
     public DeleteContactRejectTask(MyContactsActivity activity) {
         super(activity);
@@ -31,7 +32,7 @@ public class DeleteContactRejectTask extends AbstractTask<String,Void,String,MyC
     protected String doInBackground(String... params) {
         Context ctx = weakReference.get();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
-        String otherEmail = params[0];
+        otherEmail = params[0];
 
         Calendar c = Calendar.getInstance();
         String dateStr = DateUtils.formatDate(c.getTime());
@@ -65,11 +66,11 @@ public class DeleteContactRejectTask extends AbstractTask<String,Void,String,MyC
 
     @Override
     protected void onPostExecute(String str) {
-        weakReference.get().onContactRejectSuccess();
+        weakReference.get().onContactRejectSuccess(otherEmail);
     }
 
     public interface ContactAggregator {
-        public void onContactRejectSuccess();
+        public void onContactRejectSuccess(String contact);
     }
 
 }

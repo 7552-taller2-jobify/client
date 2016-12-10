@@ -17,6 +17,7 @@ public class PostVoteTask extends AbstractTask<String,Void,String,MyContactsActi
 
     private final MyPreferences pref;
     private MyPreferenceHelper helper;
+    private String otherEmail;
 
     public PostVoteTask(MyContactsActivity activity) {
         super(activity);
@@ -28,7 +29,7 @@ public class PostVoteTask extends AbstractTask<String,Void,String,MyContactsActi
     protected String doInBackground(String... params) {
         Context ctx = weakReference.get();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
-        String otherEmail = params[0];
+        otherEmail = params[0];
 
         String urlString = "/users/" + helper.getProfessional().getEmail() + "/vote"+
                 "?token="+token+
@@ -58,11 +59,11 @@ public class PostVoteTask extends AbstractTask<String,Void,String,MyContactsActi
 
     @Override
     protected void onPostExecute(String str) {
-        weakReference.get().onVoteSuccess();
+        weakReference.get().onVoteSuccess(otherEmail);
     }
 
     public interface Recomendation {
-        public void onVoteSuccess();
+        public void onVoteSuccess(String contact);
     }
 
 }

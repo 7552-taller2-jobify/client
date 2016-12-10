@@ -20,6 +20,7 @@ public class PostContactRequestTask extends AbstractTask<String,Void,String,MyCo
 
     private final MyPreferences pref;
     private MyPreferenceHelper helper;
+    private String otherEmail;
 
     public PostContactRequestTask(MyContactsActivity activity) {
         super(activity);
@@ -31,15 +32,15 @@ public class PostContactRequestTask extends AbstractTask<String,Void,String,MyCo
     protected String doInBackground(String... params) {
         Context ctx = weakReference.get();
         String token = pref.get(ctx.getString(R.string.shared_pref_current_token),"");
-        String otherEmail = params[0];
+        otherEmail = params[0];
 
         Calendar c = Calendar.getInstance();
         String dateStr = DateUtils.formatDate(c.getTime());
 
         String urlString = "/users/" + helper.getProfessional().getEmail() + "/contact"+
-                "?token="+token+
-                "&date="+dateStr+
-                "&email="+otherEmail;
+                "?token=" + token +
+                "&email=" + otherEmail +
+                "&date=" + dateStr;
         try{
             restClient.post(urlString, null, withAuth(ctx));
         } catch (final ServerErrorException e) {
@@ -65,11 +66,11 @@ public class PostContactRequestTask extends AbstractTask<String,Void,String,MyCo
 
     @Override
     protected void onPostExecute(String str) {
-        weakReference.get().onContactRequestSuccess();
+        weakReference.get().onContactRequestSuccess(otherEmail);
     }
 
     public interface ContactAggregator {
-        public void onContactRequestSuccess();
+        public void onContactRequestSuccess(String contact);
     }
 
 }

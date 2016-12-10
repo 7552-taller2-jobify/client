@@ -67,7 +67,8 @@ public class ProfileActivity extends AppCompatActivity
         PutPersonalTask.ProfileEdit,
         PutSummaryTask.ProfileEdit,
         PutPictureTask.ProfileEdit,
-        PutExpertiseTask.ProfileEdit {
+        PutExpertiseTask.ProfileEdit,
+        PutSkillsTask.ProfileEdit {
 
     private MyPreferences pref;
     private MyPreferenceHelper helper;
@@ -324,7 +325,7 @@ public class ProfileActivity extends AppCompatActivity
             ProfileExpertiseResult r = expertiseListFragment.getAdapter().getExpertises();
             Gson gson = new Gson();
             String json = gson.toJson(r);
-            new PutExpertiseTask(this).execute(json);
+            //new PutExpertiseTask(this).execute(json);
 
             // skills
             ProfileSkillList s = skillListFragment.getAdapter().getSkills();
@@ -513,6 +514,11 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onProfileExpertiseModificationSuccess() {
+
+    }
+
+    @Override
+    public void onProfileSkillModificationSuccess() {
 
     }
 }

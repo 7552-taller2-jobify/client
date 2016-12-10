@@ -17,6 +17,7 @@ import ar.fi.uba.jobify.tasks.search.GetUsersTask;
 import ar.fi.uba.jobify.utils.AppSettings;
 import ar.fi.uba.jobify.utils.MyPreferenceHelper;
 import ar.fi.uba.jobify.utils.MyPreferences;
+import ar.fi.uba.jobify.utils.ShowMessage;
 import fi.uba.ar.jobify.R;
 
 public class MyContactsActivity extends AppCompatActivity
@@ -40,11 +41,6 @@ public class MyContactsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onContactRequestSuccess() {
-        // TODO smpiano contact done.
-    }
-
-    @Override
     public void onContactAcceptSuccess() {
         // TODO smpiano contact accept done.
     }
@@ -54,18 +50,24 @@ public class MyContactsActivity extends AppCompatActivity
         // TODO smpiano contact pending done.
     }
 
+
     @Override
-    public void onContactRejectSuccess() {
-        // TODO smpiano contact reject done.
+    public void onContactRejectSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] rechazado.");
     }
 
     @Override
-    public void onVoteSuccess() {
-        // TODO smpiano vote done.
+    public void onContactRequestSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] solicitud enviada.");
     }
 
     @Override
-    public void onUnvoteSuccess() {
-        // TODO smpiano vote done.
+    public void onUnvoteSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] me fallaste!");
+    }
+
+    @Override
+    public void onVoteSuccess(String contact) {
+        ShowMessage.showSnackbarSimpleMessage(getCurrentFocus(),"["+contact+"] recomendado.");
     }
 }

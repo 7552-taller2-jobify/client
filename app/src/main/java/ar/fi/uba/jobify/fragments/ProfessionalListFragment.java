@@ -16,10 +16,15 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 
 import ar.fi.uba.jobify.activities.ChatActivity;
+import ar.fi.uba.jobify.activities.MyContactsActivity;
 import ar.fi.uba.jobify.activities.ProfileActivity;
-import ar.fi.uba.jobify.adapters.ContactListAdapter;
 import ar.fi.uba.jobify.adapters.ProfessionalListAdapter;
 import ar.fi.uba.jobify.domains.ProfessionalSearchItem;
+import ar.fi.uba.jobify.server.RestClient;
+import ar.fi.uba.jobify.tasks.contact.DeleteContactRejectTask;
+import ar.fi.uba.jobify.tasks.contact.PostContactRequestTask;
+import ar.fi.uba.jobify.tasks.recomendation.DeleteVoteTask;
+import ar.fi.uba.jobify.tasks.recomendation.PostVoteTask;
 import fi.uba.ar.jobify.R;
 
 /**
@@ -28,6 +33,7 @@ import fi.uba.ar.jobify.R;
 public class ProfessionalListFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ProfessionalSearchItem professionalSelected;
+    private MyContactsActivity act;
 
     public ProfessionalListFragment() {
         super();
@@ -36,6 +42,8 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        act = (MyContactsActivity) getActivity();
 
         //inflo la vista de listado de elementos
         View fragmentView = inflater.inflate(R.layout.fragment_professional_list, container, false);
@@ -78,8 +86,14 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_my_contacts_item_connect:
+                if (RestClient.isOnline(getContext())) {
+                    new PostContactRequestTask( act ).execute(professionalSelected.getEmail());
+                }
                 break;
             case R.id.menu_my_contacts_item_unconnect:
+                if (RestClient.isOnline(getContext())) {
+                    new DeleteContactRejectTask( act ).execute(professionalSelected.getEmail());
+                }
                 break;
             case R.id.menu_my_contacts_item_chat:
                 Intent intent = new Intent(getContext(), ChatActivity.class);
@@ -87,8 +101,14 @@ public class ProfessionalListFragment extends Fragment implements AdapterView.On
                 startActivity(intent);
                 break;
             case R.id.menu_my_contacts_item_vote:
+                if (RestClient.isOnline(getContext())) {
+                    new PostVoteTask( act ).execute(professionalSelected.getEmail());
+                }
                 break;
             case R.id.menu_my_contacts_item_unvote:
+                if (RestClient.isOnline(getContext())) {
+                    new DeleteVoteTask( act ).execute(professionalSelected.getEmail());
+                }
                 break;
             default:
                 return super.onContextItemSelected(item);
